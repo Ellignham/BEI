@@ -34,9 +34,9 @@ def solveur1D_md(mesh,dt,residu):
     #convergence loop
     while (residu < residu_i):
         
-        for i in range(0): #find the range
+        for i in range(1,Nptsx-1): #find the range
             
-            temp_tmp[:,i]=0 #find the right model
+            temp_tmp[:,i]=temp[:,i] #find the right model
         
         residu_i=max(abs(temp_tmp[0,:]-temp[0,:]))
         temp=np.copy(temp_tmp)

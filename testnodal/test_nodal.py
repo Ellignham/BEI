@@ -18,10 +18,14 @@ Ly=1.
 Nptsx=20
 Nptsy=2
 
-#Definition of the constants needed for the calculation
+##Definition of the constants needed for the calculation##
 T0=20
 T1=30
-alpha=0.002
+#Water
+alpha=0.143*10**(-5)
+conductance=598.03*10**(-3)
+resistance=1/conductance
+#Computation constants
 dt=((Lx**2)/(Nptsx**2))/(2*alpha)
 residu=10**(-5)
 
@@ -30,13 +34,13 @@ residu=10**(-5)
 ##Initialisation##
 
 #create arrays
-mesh=np.zeros((Nptsy,Nptsx))
+mesh_df=np.zeros((Nptsy,Nptsx))
 x=np.linspace(0,Lx,Nptsx)
 y=np.linspace(0,Ly,Nptsy)
 
 #Initial values of arrays
-mesh[:,:]=T0
-mesh[:,0]=T1
+mesh_df[:,:]=T0
+mesh_df[:,0]=T1
 
 
 
@@ -44,7 +48,7 @@ mesh[:,0]=T1
 ##Solver##
 
 #reference
-temp_df=solveur1D_df(mesh,x,dt,alpha,Nptsx,Lx,residu,T1,T0)
+temp_df=solveur1D_df(mesh_df,x,dt,alpha,Nptsx,Lx,residu,T1,T0)
 #temp_md=solveur1D_md(mesh,dt,residu)
 
 
