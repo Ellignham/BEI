@@ -18,12 +18,19 @@ class Init(Input):
 
         x           : variable containing the x position of the nodes
         y           : variable containing the y position of the nodes 
+        
+        nodes       : |id of node|x position of node|y position of node|
+        neig        : |id of node|neighbour 1|neighbour 2| ...
+
         """
         
         Input.__init__(self)
         
         self.x = np.linspace(0,self.Lx/2,self.Nptsx)
         self.y = np.linspace(0,self.Ly/2,self.Nptsy)
+
+        self.nodes = np.zeroes((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,3))
+        self.neig = np.zeroes((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,5))
 
     def domain(self):
         """
@@ -112,50 +119,6 @@ class Init(Input):
         self.Rx = np.zeros((self.Nptsy,self.Nptsx+1))
         self.Ry = np.zeros((self.Nptsy+1,self.Nptsx))
     
-    def domain(self):
-        """
-        Creates the shape of the tank and fills it with nodes
-        """
-
-        #Create the boudary of the tank
-        self.boundary=np.zeros((self.Nptsy,2))
-
-        for j in range(0,self.Nptsy):
-            self.boundary[j,0]=self.y[j]
-            if (self.y[j]<self.Lx/2):
-                self.boundary[j,1]=self.Lx/2-math.sqrt((self.Lx/2)**2-(self.y[j]-self.Lx/2)**2)
-            elif (self.y[j]>self.Ly-self.Lx/2):
-                self.boundary[j,1]=self.Lx/2-math.sqrt(abs((self.Lx/2)**2-(self.y[j]-self.Ly+self.Lx/2)**2))
-            else :
-                self.boundary[j,1]=0
-
-        #Fill the tank with nodes
-        self.xnodes=np.zeros((self.Nptsy,self.Nptsx))
-        self.ynodes=np.zeros((self.Nptsy,self.Nptsx))
-
-        for i in range(0,self.Nptsx):
-            for j in range(0,self.Nptsy):
-                if (self.y[j]<self.Lx/2):# and self.y[j]>math.sqrt(abs((self.Lx/2-self.x[i]/2)**2-(self.y[j]-self.Lx/2)**2))-self.Lx/2 ) :
-                    self.ynodes[j,i]=self.y[j]
-                    self.xnodes[j,i]=self.x[i]
-                elif (self.y[j]<self.Ly-self.Lx/2 and self.y[j]>self.Lx/2):
-                    self.ynodes[j,i]=self.y[j]
-                    self.xnodes[j,i]=self.x[i]
-                elif (self.y[j]>self.Ly+self.Lx/2): 
-                    self.ynodes[j,i]=self.y[j]
-                    self.xnodes[j,i]=self.x[i]#self.Lx/2-math.sqrt(abs((self.Lx/2-self.x[i]/2)**2-(self.y[j]-self.Ly+self.Lx/2)**2))
-
-
-        
-        plt.figure()
-        plt.plot(self.boundary[:,1],self.boundary[:,0],'or')
-        plt.xlim(-0.5,1.5)
-        plt.ylim(-1,1)
-        plt.plot(self.xnodes,self.ynodes,'o')
-      #  plt.ylim(8,10.5)
-      #  plt.xlim(0.5,1.4)
-        plt.show()
-
     def resistance(self):
         if self.cond :
             for j in range(1,self.Nptsy-1):
