@@ -48,7 +48,7 @@ class Init(Input):
                 self.boundary[j,1]=self.Lx/2-math.sqrt(abs((self.Lx/2)**2-(self.y[j]-self.Ly+self.Lx/2)**2))
             else :
                 self.boundary[j,1]=0
-
+init.py | 51 +++++++
         #Fill the tank with nodes
         self.xnodes=np.zeros((self.Nptsy,self.Nptsx))
         self.ynodes=np.zeros((self.Nptsy,self.Nptsx))
@@ -139,8 +139,3 @@ class Init(Input):
             print()
         #Creation on thermal capacity array
  
-
-    def update_parameters(self):
-        """
-        Computes the thermodynamic parameters of the fluid using correlations
-        """
