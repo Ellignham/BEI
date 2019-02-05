@@ -20,7 +20,7 @@ simu.resistance()
 #simu.plot_temp()
 #simu.plot_pres()
 
-simu.domain()
+simu.domain_cart()
 
 if simu.debug :
     simu.write_debug()

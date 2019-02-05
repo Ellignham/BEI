@@ -19,7 +19,7 @@ class Init(Input):
         x           : variable containing the x position of the nodes
         y           : variable containing the y position of the nodes 
         
-        nodes       : |id of node|x position of node|y position of node|
+        nodes       : |id of node|y position of node|x position of node|
         neig        : |id of node|neighbour 1|neighbour 2| ...
 
         """
@@ -27,10 +27,26 @@ class Init(Input):
         Input.__init__(self)
         
         self.x = np.linspace(0,self.Lx/2,self.Nptsx)
-        self.y = np.linspace(0,self.Ly/2,self.Nptsy)
+        self.y = np.linspace(0,self.Ly,self.Nptsy)
 
-        self.nodes = np.zeroes((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,3))
-        self.neig = np.zeroes((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,5))
+        self.nodes = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,3))
+        self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,5))
+
+    def domain_cart(self):
+        """
+        Rectangle domain to test
+        """
+
+        for j in range(0,self.Nptsy):
+            for i in range(0,self.Nptsx):
+                self.nodes[i+j*self.Nptsx,0]=i+j*self.Nptsx
+                self.nodes[i+j*self.Nptsx,1]=self.y[j]
+                self.nodes[i+j*self.Nptsx,2]=self.x[i]
+
+        plt.figure()
+        plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
+        plt.plot()
+
 
     def domain(self):
         """
@@ -48,7 +64,7 @@ class Init(Input):
                 self.boundary[j,1]=self.Lx/2-math.sqrt(abs((self.Lx/2)**2-(self.y[j]-self.Ly+self.Lx/2)**2))
             else :
                 self.boundary[j,1]=0
-init.py | 51 +++++++
+
         #Fill the tank with nodes
         self.xnodes=np.zeros((self.Nptsy,self.Nptsx))
         self.ynodes=np.zeros((self.Nptsy,self.Nptsx))
