@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import math as math
+import scipy.spatial as sp
 
 #class
 from input import Input
@@ -20,7 +21,7 @@ class Init(Input):
         y           : variable containing the y position of the nodes 
         
         nodes       : |id of node|y position of node|x position of node|
-        neig        : |id of node|neighbour 1|neighbour 2| ...
+        neig        : |id of node|neighbour 1|neighbour 2| ...  if neighbour = 0 : boundary
 
         """
         
@@ -92,14 +93,16 @@ class Init(Input):
       #  plt.xlim(0.5,1.4)
         plt.show()
 
+    def detect_neig(self):
+        test=0
+        fds=sp.KDTree(self.nodes)
+        print(fds) 
     def init_domain(self):
         """
         Initialise the domain before the computation
 
 
         Variables :
-
-        mesh        : contain the x and y position of the nodes (mesh[:,0] x positions,                      mesh[:,1] y positions)
 
         temp        : array containing the temperature field [K]
         pres        : array containing the pressure field [Pa]
@@ -112,14 +115,12 @@ class Init(Input):
 
         """
         
-        #Creation of the mesh
-        self.mesh = np.array((self.y,self.x))
-        
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsy,self.Nptsx)) 
-        self.temp[1:self.Nptsy-1,1:self.Nptsx-1] = self.tfluid_init 
-        self.temp[0,:] = self.T1 ; self.temp[self.Nptsy-1,:] = self.T1
-        self.temp[:,0] = self.T1 ; self.temp[:,self.Nptsx-1] = self.T1
+        self.temp = np.zeros((self.Nptsy,self.Nptsy))   
+#     self.temp = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,2)) 
+   #     self.temp[1:self.Nptsy-1,1:self.Nptsx-1] = self.tfluid_init 
+   #     self.temp[0,:] = self.T1 ; self.temp[self.Nptsy-1,:] = self.T1
+   #     self.temp[:,0] = self.T1 ; self.temp[:,self.Nptsx-1] = self.T1
         
         #Creation of the pressure array
         self.pres = np.zeros((self.Nptsy,self.Nptsx)) 
