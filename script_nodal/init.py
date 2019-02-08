@@ -21,7 +21,7 @@ class Init(Input):
         y           : variable containing the y position of the nodes 
         
         nodes       : |id of node|y position of node|x position of node|
-        neig        : |id of node|neighbour 1|neighbour 2| ...  if neighbour = 0 : boundary
+        neig        : |id of node|neighbor 1|neighbor 2| ...  if neighbor = -1 : boundary
 
         """
         
@@ -40,9 +40,18 @@ class Init(Input):
 
         for j in range(0,self.Nptsy):
             for i in range(0,self.Nptsx):
+                #nodes
                 self.nodes[i+j*self.Nptsx,0]=i+j*self.Nptsx
                 self.nodes[i+j*self.Nptsx,1]=self.y[j]
                 self.nodes[i+j*self.Nptsx,2]=self.x[i]
+                #neighbor
+                self.neig[i+j*self.Nptsx,0]=i+j*self.Nptsx
+                if (j>0 and j<self.Nptsy-1 and i>0 and i<self.Nptsx-1):
+                    self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
+                    self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
+                    self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
+
 
         plt.figure()
         plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
