@@ -10,15 +10,6 @@ import math as math
 from input import Input
 from init import Init
 
-<<<<<<< HEAD
-class Reservoir(Init):
-    def __init__(self):
-        Init.__init__(self)
-
-
-    def systeme(self):
-        pass	
-=======
 class Reservoir(Init)
 	def __init__(self):
 		Init.__init__(self)
@@ -27,4 +18,3 @@ class Reservoir(Init)
 	def systeme(self):
 		
 		
->>>>>>> refs/remotes/origin/master
