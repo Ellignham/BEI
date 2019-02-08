@@ -26,15 +26,16 @@ class Reservoir(Init) :
 	def systeme_init(self) :
 		T0=10.
 		self.Tinit = T0*np.ones(self.Nptsy*self.Nptsx)
-		print('Tinit dasn init', self.Tinit)
-		
-		
+		self.domain_cart()
+		self.init_domain()
+		self.resistance()
+		print('nodes', self.nodes)
+		print('res', self.Rx)
+		print('res', self.Ry)
+
 		
 	def systeme(self,T, dT_dt, time=0.0):
 		pass
 		
 Reservoir1=Reservoir()
-print(Reservoir1.Nptsx)
-print(Reservoir1.Nptsy)
 Reservoir1.systeme_init()
-print('Tinit=', Reservoir1.Tinit)
