@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 #Imports
 import numpy as np 
@@ -62,6 +62,7 @@ class Init(Input):
         """
         Creates the shape of the tank and fills it with nodes
         """
+        
 
         #Create the boudary of the tank
         self.boundary=np.zeros((self.Nptsy,2))
