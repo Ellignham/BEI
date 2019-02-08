@@ -62,15 +62,6 @@ class Debug(Reservoir):
         file.write("\n")
         file.write("\n") 
 
-        file.write("mesh array" + "\n")
-        for j in range(0,self.Nptsy):
-            file.write(str(self.mesh[0][j]) + " " )
-        file.write("\n")
-        for i in range(0,self.Nptsx):
-            file.write(str(self.mesh[1][i]) + " " )
-        file.write("\n")
-        file.write("\n")
- 
         file.write("temperature array" + "\n")
         for j in range(0,self.Nptsy):
             for i in range(0,self.Nptsx):
