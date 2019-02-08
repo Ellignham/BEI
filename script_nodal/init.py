@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 #Imports
 import numpy as np 
@@ -42,6 +42,7 @@ class Init(Input):
                 self.nodes[i+j*self.Nptsx,0]=i+j*self.Nptsx
                 self.nodes[i+j*self.Nptsx,1]=self.y[j]
                 self.nodes[i+j*self.Nptsx,2]=self.x[i]
+            
 
         plt.figure()
         plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
@@ -52,6 +53,7 @@ class Init(Input):
         """
         Creates the shape of the tank and fills it with nodes
         """
+        
 
         #Create the boudary of the tank
         self.boundary=np.zeros((self.Nptsy,2))
