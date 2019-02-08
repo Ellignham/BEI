@@ -81,13 +81,8 @@ class Init(Input):
       
         self.neig[self.Nptsx*(self.Nptsy-1),1]=self.Nptsx*(self.Nptsy-1)+1; self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-2);self.neig[self.Nptsx*(self.Nptsy-1),3]=-1
         self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2; self.neig[self.Nptsx*self.Nptsy-1,2]=self.Nptsx*(self.Nptsy-1)-1;self.neig[self.Nptsx*self.Nptsy-1,3]=-1
+    
         
-        plt.figure()
-        plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
-        plt.plot()
-
-        print(self.neig)
-
     def domain(self):
         """
         Creates the shape of the tank and fills it with nodes
@@ -174,9 +169,8 @@ class Init(Input):
 
         #Creation of thermal resistance arrays
         self.Rx = np.zeros(self.Nptsy*(self.Nptsx-1))
-        self.Rx = np.zeros((self.Nptsy-1)*self.Nptsx)
-        self.R = np.array([0]*self.Nptsy*self.Nptsx)
-        print('R',self.R)
+        self.Ry = np.zeros((self.Nptsy-1)*self.Nptsx)
+        self.R = np.empty([0]*self.Nptsy*self.Nptsx)#.reshape((len(self.nodes),1))
     
     def resistance(self):
         if self.cond :
@@ -196,9 +190,18 @@ class Init(Input):
         #Creation on thermal capacity array
     
     def resistance_cart(self):
-        for idnode in range(len(self.nodes)) :
-            j=0
-            while self.neig[idnode,j] != -1 :
-                print(idnode)
-                self.R[idnode].append(idnode)
+        #~ for idnode in range(len(self.nodes)) :
+        idnode=0
+        j=0
+        while ((int(self.neig[idnode,j])) != -1 and j<4):
+            j+=1
+            self.R[idnode, 0] = idnode
+            res = np.array([40])
+            print('toto')
+            print(self.R[idnode,:])
+            rint=np.append(self.R[idnode,:], res[0])
+            self.R=np.insert(self.R, -1, rint)
+            print('toto2')
+            
+                
 
