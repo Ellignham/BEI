@@ -51,13 +51,42 @@ class Init(Input):
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
-                if (j==0 and i>0 and i<self.Nptsx-1):
-                    self.neig[i+j*self.Nptsx,1]=0
-            
+          
+                elif (j==0 and i>0 and i<self.Nptsx-1):
+                    self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
+                    self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
+                    self.neig[i+j*self.Nptsx,3]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,4]=-1
+
+                elif (j==self.Nptsy-1 and i>0 and i<self.Nptsx-1):
+                    self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
+                    self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
+                    self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,4]=-1
+
+                elif (i==0 and j>0 and j<self.Nptsy-1):
+                    self.neig[i+j*self.Nptsx,1]=i+1+j*self.Nptsx 
+                    self.neig[i+j*self.Nptsx,2]=i+(j-1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,3]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,4]=-1
+
+                elif (i==self.Nptsx-1 and j>0 and j<self.Nptsy-1):
+                    self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
+                    self.neig[i+j*self.Nptsx,2]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,4]=-1
+
+        self.neig[0,1]=1; self.neig[0,2]=self.Nptsx;self.neig[0,3]=-1                            
+        self.neig[self.Nptsx-1,1]=self.Nptsx-2; self.neig[self.Nptsx-1,2]=2*self.Nptsx-1;self.neig[self.Nptsx-1,3]=-1
+      
+        self.neig[self.Nptsx*(self.Nptsy-1),1]=self.Nptsx*(self.Nptsy-1)+1; self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-2);self.neig[self.Nptsx*(self.Nptsy-1),3]=-1
+        self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2; self.neig[self.Nptsx*self.Nptsy-1,2]=self.Nptsx*(self.Nptsy-1)-1;self.neig[self.Nptsx*self.Nptsy-1,3]=-1
+        
         plt.figure()
         plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
         plt.plot()
 
+        print(self.neig)
 
     def domain(self):
         """
