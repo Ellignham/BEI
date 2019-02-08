@@ -10,6 +10,8 @@ LibPath='../../Sujet_29/'
 sys.path.append(LibPath)
 import NumericalProblemClass as PbDef
 
+#Class
+from input import Input
 from init import Init
 
 class Reservoir(Init) :

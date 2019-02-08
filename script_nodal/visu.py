@@ -9,6 +9,7 @@ import math as math
 #Class
 from input import Input
 from init import Init
+from pops import Reservoir
 from debug import Debug
 
 class Visu(Debug):

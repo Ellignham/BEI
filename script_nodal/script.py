@@ -9,6 +9,7 @@ import math as math
 #Class
 from input import Input
 from init import Init
+from pops import Reservoir
 from debug import Debug
 from visu import Visu
 
@@ -21,6 +22,7 @@ simu.resistance()
 #simu.plot_pres()
 
 simu.domain_cart()
+simu.detect_neig()
 
 if simu.debug :
     simu.write_debug()

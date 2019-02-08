@@ -9,15 +9,15 @@ import math as math
 #Class
 from input import Input
 from init import Init
+from pops import Reservoir
 
-
-class Debug(Init):
+class Debug(Reservoir):
     def __init__(self):
         """
         Class used to write to files the different arrays to hel debug the code
         """
         
-        Init.__init__(self)
+        Reservoir.__init__(self)
    
     def write_debug(self):
         """ 
