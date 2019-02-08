@@ -144,8 +144,8 @@ class Init(Input):
         self.V[:,:]=self.vfluid_init
 
         #Creation of thermal resistance arrays
-        self.Rx = np.zeros((self.Nptsy,self.Nptsx+1))
-        self.Ry = np.zeros((self.Nptsy+1,self.Nptsx))
+        self.Rx = np.zeros(self.Nptsy*(self.Nptsx-1))
+        self.Rx = np.zeros((self.Nptsy-1)*self.Nptsx)
     
     def resistance(self):
         if self.cond :

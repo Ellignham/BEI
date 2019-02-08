@@ -28,10 +28,12 @@ class Reservoir(Init) :
 		self.Tinit = T0*np.ones(self.Nptsy*self.Nptsx)
 		self.domain_cart()
 		self.init_domain()
-		self.resistance()
-		print('nodes', self.nodes)
-		print('res', self.Rx)
-		print('res', self.Ry)
+		#~ self.resistance()
+		#~ print('nodes', self.nodes)
+		#~ print('res', self.Rx)
+		#~ print('res', self.Ry)
+
+		
 
 		
 	def systeme(self,T, dT_dt, time=0.0):
