@@ -44,7 +44,6 @@ class Init(Input):
                 self.nodes[i+j*self.Nptsx,0]=i+j*self.Nptsx
                 self.nodes[i+j*self.Nptsx,1]=self.y[j]
                 self.nodes[i+j*self.Nptsx,2]=self.x[i]
-<<<<<<< HEAD
                 #neighbor
                 self.neig[i+j*self.Nptsx,0]=i+j*self.Nptsx
                 if (j>0 and j<self.Nptsy-1 and i>0 and i<self.Nptsx-1):
@@ -53,9 +52,7 @@ class Init(Input):
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
 
-=======
             
->>>>>>> f6170cde7336fe74012b30939d63235566d83374
 
         plt.figure()
         plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
