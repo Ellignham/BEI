@@ -51,9 +51,9 @@ class Init(Input):
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
-
+                if (j==0 and i>0 and i<self.Nptsx-1):
+                    self.neig[i+j*self.Nptsx,1]=0
             
-
         plt.figure()
         plt.plot(self.nodes[:,2],self.nodes[:,1],'o')
         plt.plot()
