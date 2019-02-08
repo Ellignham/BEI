@@ -23,12 +23,12 @@ class Reservoir(Init) :
 		Init.__init__(self)
 		self.Tinit=0.
 
-	def systeme_init(self) :
+	def systeme_init_cart(self) :
 		T0=10.
 		self.Tinit = T0*np.ones(self.Nptsy*self.Nptsx)
 		self.domain_cart()
 		self.init_domain()
-		#~ self.resistance()
+		self.resistance_cart()
 		#~ print('nodes', self.nodes)
 		#~ print('res', self.Rx)
 		#~ print('res', self.Ry)
@@ -40,4 +40,4 @@ class Reservoir(Init) :
 		pass
 		
 Reservoir1=Reservoir()
-Reservoir1.systeme_init()
+Reservoir1.systeme_init_cart()

@@ -146,6 +146,8 @@ class Init(Input):
         #Creation of thermal resistance arrays
         self.Rx = np.zeros(self.Nptsy*(self.Nptsx-1))
         self.Rx = np.zeros((self.Nptsy-1)*self.Nptsx)
+        self.R = np.array([0]*self.Nptsy*self.Nptsx)
+        print('R',self.R)
     
     def resistance(self):
         if self.cond :
@@ -162,8 +164,12 @@ class Init(Input):
             for j in range(1,self.Nptsy):
                 self.Ry[j,0]=self.Ry[j,0] + (self.y[j]-self.y[j-1])/(self.k*(self.x[1]-self.x[0]))
                 self.Ry[j,self.Nptsx-1]=self.Ry[j,self.Nptsx-1] + (self.y[j]-self.y[j-1])/(self.k*(self.x[self.Nptsx-1]-self.x[self.Nptsx-2]))
-        
-        if self.conv :
-            print()
         #Creation on thermal capacity array
- 
+    
+    def resistance_cart(self):
+        for idnode in range(len(self.nodes)) :
+            j=0
+            while self.neig[idnode,j] != -1 :
+                print(idnode)
+                self.R[idnode].append(idnode)
+
