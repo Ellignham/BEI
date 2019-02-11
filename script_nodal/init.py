@@ -128,10 +128,6 @@ class Init(Input):
       #  plt.xlim(0.5,1.4)
         plt.show()
 
-    def detect_neig(self):
-        test=0
-        fds=sp.KDTree(self.nodes)
-        print(fds) 
     def init_domain(self):
         """
         Initialise the domain before the computation
@@ -145,8 +141,9 @@ class Init(Input):
         U           : array containing the x velocity field [m/s]
         V           : array containing the y velocity field [m/s]
 
-        Rx          : array containing the conduction thermal resistance Rj,i+1/2 [K.m/W]
-        Ry          : array containing the conduction thermal resistance Rj+1/2,i [K.m/W]
+        R          : array containing the conduction thermal resistance [K.m/W]
+        C          : array containing the conduction thermal capacity
+
 
         """
         
@@ -179,23 +176,6 @@ class Init(Input):
                 self.temp[k]=self.tfluid_init
 			
         print(self.temp)
-    
-    def resistance(self):
-        if self.cond :
-            for j in range(1,self.Nptsy-1):
-                for i in range(1,self.Nptsx):      
-                    self.Rx[j,i]=self.Rx[j,i] + (self.x[i]-self.x[i-1])/(self.k*(self.y[j+1]-self.y[j-1])/2)
-            for i in range(1,self.Nptsx):
-                self.Rx[0,i]=self.Rx[0,i] + (self.x[i]-self.x[i-1])/(self.k*(self.y[1]-self.y[0]))
-                self.Rx[self.Nptsy-1,i]=self.Rx[self.Nptsy-1,i] + (self.x[i]-self.x[i-1])/(self.k*(self.y[self.Nptsy-1]-self.y[self.Nptsy-2]))
- 
-            for j in range(1,self.Nptsy):
-                for i in range(1,self.Nptsx-1):      
-                    self.Ry[j,i]=self.Ry[j,i] + (self.y[j]-self.y[j-1])/(self.k*(self.x[i+1]-self.x[i-1])/2)
-            for j in range(1,self.Nptsy):
-                self.Ry[j,0]=self.Ry[j,0] + (self.y[j]-self.y[j-1])/(self.k*(self.x[1]-self.x[0]))
-                self.Ry[j,self.Nptsx-1]=self.Ry[j,self.Nptsx-1] + (self.y[j]-self.y[j-1])/(self.k*(self.x[self.Nptsx-1]-self.x[self.Nptsx-2]))
-        #Creation on thermal capacity array
     
     def resistance_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
