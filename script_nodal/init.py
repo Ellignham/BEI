@@ -151,26 +151,34 @@ class Init(Input):
         """
         
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsy,self.Nptsy))   
-#     self.temp = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,2)) 
-   #     self.temp[1:self.Nptsy-1,1:self.Nptsx-1] = self.tfluid_init 
-   #     self.temp[0,:] = self.T1 ; self.temp[self.Nptsy-1,:] = self.T1
-   #     self.temp[:,0] = self.T1 ; self.temp[:,self.Nptsx-1] = self.T1
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
         
         #Creation of the pressure array
-        self.pres = np.zeros((self.Nptsy,self.Nptsx)) 
-        self.pres[:,:] = self.pfluid_init 
+        self.pres = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta)) 
+        self.pres[:] = self.pfluid_init 
         
         #Creation of the velocity fields
-        self.U = np.zeros((self.Nptsy,self.Nptsx))
-        self.V = np.zeros((self.Nptsy,self.Nptsx))
-        self.U[:,:]=self.ufluid_init
-        self.V[:,:]=self.vfluid_init
+        self.U = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
+        self.V = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
+        self.U[:]=self.ufluid_init
+        self.V[:]=self.vfluid_init
 
         #Creation of thermal resistance arrays
         self.Rx = np.zeros(self.Nptsy*(self.Nptsx-1))
         self.Ry = np.zeros((self.Nptsy-1)*self.Nptsx)
         self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
+        
+        #Creation of thermal capacity array
+        self.C = np.zeros((self.Nptsy*self.Nptsx))
+    
+    def initemp_cart(self):
+        for k in range(0,self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta):
+            if int(self.nodes[k,1])<self.Ly/2 :
+                self.temp[k]=self.T1
+            else :
+                self.temp[k]=self.tfluid_init
+			
+        print(self.temp)
     
     def resistance(self):
         if self.cond :
