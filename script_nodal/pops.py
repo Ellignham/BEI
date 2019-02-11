@@ -21,14 +21,14 @@ class Reservoir(Init) :
 
 	def __init__(self):
 		Init.__init__(self)
-		self.Tinit=0.
 
 	def systeme_init_cart(self, temp) :
 		self.domain_cart()
 		self.init_domain()
 		self.resistance_cart()
 		self.initemp_cart()
-		temp=self.temp
+		temp[:]=np.copy(self.temp)
+		#~ print()
 		#~ Rajout condition initiale
 
 		
@@ -36,18 +36,16 @@ class Reservoir(Init) :
 		
 	def systeme_cond(self, T, dT_dt, time=0.0):
 		taille=self.Nptsy*self.Nptsx
-		dT_dt=np.zeros(taille)
 		for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
 			while (j<5 and (int(self.neig[idnode,j]) != -1)):
+				C=1. #inverse capacité à implémenter
 				G=1./self.R[idnode,j]
 				ng=int(self.neig[idnode,j])
-				deltaT=self.temp[ng] - self.temp[idnode]
-				dT_dt[idnode]+= G*deltaT
+				deltaT=T[ng] - T[idnode]
+				dT_dt[idnode]+= G*deltaT *C
 				j+=1
-		print(time)
-		print(dT_dt)
 
 
 		#~ INITIALISATION 
@@ -58,16 +56,16 @@ Reservoir1=Reservoir()
 
 		#~ INTEGRATION TEMPORELLE ET ECRITURE
 		
-listVar=[i for i in range(Reservoir1.Nptsx*Reservoir1.Nptsy)]
-		
 ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy
+#~ listVar=[i for i in range(ProblemSize)]
+listVar=[0,1]
 AdapTimeStepBool=False
-Duration=6.
-MAXNTIMESTEP=101 
-TIMESTEP=0.0002
-METHODE='RK451'
+Duration=1.
+MAXNTIMESTEP=1001 
+TIMESTEP=0.002
+METHODE='Euler'
 ListOfVariablesToSave=listVar
-SavedIteration=10
+SavedIteration=100
 Error=1e-8
 
 Problem=PbDef.NumericalProblem(Reservoir1.systeme_init_cart,Reservoir1.systeme_cond,METHODE,\
