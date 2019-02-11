@@ -175,8 +175,6 @@ class Init(Input):
             else :
                 self.temp[k]=self.tfluid_init
 			
-        print(self.temp)
-    
     def resistance_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
