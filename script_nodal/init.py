@@ -196,7 +196,11 @@ class Init(Input):
             j=1
             self.R[idnode,0] = idnode
             while (j<5 and (int(self.neig[idnode,j]) != -1)):
-                res = 
+                ng=int(self.neig[idnode,j])
+                dx=self.nodes[ng,2] - self.nodes[idnode,2]
+                dy=self.nodes[ng,1] - self.nodes[idnode,1]
+                dl=np.sqrt(dx**2 + dy**2)
+                res = 1/self.k
                 self.R[idnode,j]= res
                 j+=1
             print('R',self.R[idnode])
