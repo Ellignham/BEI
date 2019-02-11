@@ -190,19 +190,22 @@ class Init(Input):
         #Creation on thermal capacity array
     
     def resistance_cart(self):
-        
+        dx=self.nodes[1,2] - self.nodes[0,2]
+        dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         for idnode in range(self.Nptsy*self.Nptsx) :
-            #~ print('neig',self.neig[idnode])
             j=1
             self.R[idnode,0] = idnode
             while (j<5 and (int(self.neig[idnode,j]) != -1)):
                 ng=int(self.neig[idnode,j])
-                dx=self.nodes[ng,2] - self.nodes[idnode,2]
-                dy=self.nodes[ng,1] - self.nodes[idnode,1]
-                dl=np.sqrt(dx**2 + dy**2)
-                res = 1/self.k
+                dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+                dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])
+                if (dxx < 1e-6) :
+                    res = dy /(self.k * dx)
+                else :
+                    res= dx / (self.k * dy)
                 self.R[idnode,j]= res
                 j+=1
-            print('R',self.R[idnode])
-            #~ print('neig',self.neig[idnode,j])
+
+
+
 
