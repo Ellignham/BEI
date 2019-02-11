@@ -34,8 +34,12 @@ class Reservoir(Init) :
 		
 
 		
-	def systeme(self,T, dT_dt, time=0.0):
-		pass
+	def systeme(self, T, dT_dt, time=0.0):
+		for idnode in range(self.Nptsy*self.Nptsx) :
+			j=1
+			while (j<5 and (int(self.neig[idnode,j]) != -1)):
+                ng=int(self.neig[idnode,j])
+                deltaT=self.nodes[ng,2] - self.nodes[idnode,2]
 		
 Reservoir1=Reservoir()
 Reservoir1.systeme_init_cart()
