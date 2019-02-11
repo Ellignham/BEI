@@ -29,6 +29,7 @@ class Reservoir(Init) :
 		self.domain_cart()
 		self.init_domain()
 		self.resistance_cart()
+		self.initemp_cart()
 		#~ Rajout condition initiale
 
 		
