@@ -30,9 +30,8 @@ class Init(Input):
         self.x = np.linspace(0,self.Lx/2,self.Nptsx)
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
-        self.nodes = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,3))
-        # ~ self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,4+self.ntheta))
-        self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,6))
+        self.nodes = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,3))
+        self.neig = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,4+self.ntheta))
 
     def domain_cart(self):
         """
@@ -261,15 +260,15 @@ class Init(Input):
         """
         
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
         
         #Creation of the pressure array
-        self.pres = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta)) 
+        self.pres = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta)) 
         self.pres[:] = self.pfluid_init 
         
         #Creation of the velocity fields
-        self.U = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
-        self.V = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
+        self.U = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
+        self.V = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
         self.U[:]=self.ufluid_init
         self.V[:]=self.vfluid_init
 
@@ -282,7 +281,7 @@ class Init(Input):
         self.C = np.zeros((self.Nptsy*self.Nptsx))
     
     def initemp_cart(self):
-        for k in range(0,self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta):
+        for k in range(0,self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta):
             if int(self.nodes[k,1])<self.Ly/2 :
                 self.temp[k]=self.T1
             else :
