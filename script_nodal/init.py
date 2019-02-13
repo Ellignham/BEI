@@ -31,7 +31,7 @@ class Init(Input):
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
         self.nodes = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,3))
-        self.neig = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,4+self.ntheta))
+        self.neig = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,6+self.ntheta))
 
     def domain_cart(self):
         """
@@ -311,7 +311,7 @@ class Init(Input):
         for i, txt in enumerate(self.nodes[:,0]):
             ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
         plt.xlim(0,0.5)
-        plt.ylim(0,1)
+        plt.ylim(0,0.5)
       #  plt.ylim(8,10.5)
       #  plt.xlim(0.5,1.4)
         plt.show()
@@ -380,7 +380,13 @@ class Init(Input):
                 self.R[idnode,j]= res
                 j+=1
 
+    def capacite_cart(self):
+        dx=self.nodes[1,2] - self.nodes[0,2]
+        dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
+        for idnode in range(self.Nptsy*self.Nptsx) :
+            self.C[idnode] = self.rho*self.cp*dx*dy
 
 
-# ~ test=Init()
-# ~ test.domain_tank()
+
+test=Init()
+test.domain_tank()
