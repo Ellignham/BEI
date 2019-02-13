@@ -13,7 +13,8 @@ import NumericalProblemClass as PbDef
 #Class
 from input import Input
 from init import Init
-
+# ~ from visu import lecture_champs
+# ~ from visu import *
 
 
 
@@ -76,3 +77,9 @@ ListOfIdVar=ListOfVariablesToSave,AdatativeTimeStep_Error=Error)
 
 Problem.SolveDifferentialProblem()
 
+
+		# ~ TRACE DES DONNEES
+		
+		
+# ~ exec(open("./visu.py").read())
+# ~ lecture_champs('ResultArray.dat')
