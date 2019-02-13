@@ -40,7 +40,7 @@ class Reservoir(Init) :
 			j=1
 			dT_dt[idnode]=0
 			while (j<5 and (int(self.neig[idnode,j]) != -1)):
-				C=1. #inverse capacité à implémenter
+				C=1. #inverse capacite a implementer
 				G=1./self.R[idnode,j]
 				ng=int(self.neig[idnode,j])
 				deltaT=T[ng] - T[idnode]
@@ -57,8 +57,8 @@ Reservoir1=Reservoir()
 		#~ INTEGRATION TEMPORELLE ET ECRITURE
 		
 ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy
-#~ listVar=[i for i in range(ProblemSize)]
-listVar=[0,1]
+listVar=[i for i in range(ProblemSize)]
+# ~ listVar=[0,1]
 AdapTimeStepBool=False
 Duration=1.
 MAXNTIMESTEP=1001 
