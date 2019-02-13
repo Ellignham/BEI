@@ -388,5 +388,5 @@ class Init(Input):
 
 
 
-test=Init()
-test.domain_tank()
+# ~ test=Init()
+# ~ test.domain_tank()

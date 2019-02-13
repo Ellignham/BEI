@@ -30,6 +30,7 @@ class Reservoir(Init) :
 		self.init_domain()
 		self.resistance_cart()
 		self.initemp_cart()
+		self.capacite_cart()
 		temp[:]=np.copy(self.temp)
 		#~ print()
 		#~ Rajout condition initiale
@@ -42,14 +43,15 @@ class Reservoir(Init) :
 		for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
+			C=1./self.C[idnode]
 			while (j<5 and (int(self.neig[idnode,j]) != -1)):
-				C=1. #inverse capacite a implementer
 				G=1./self.R[idnode,j]
 				ng=int(self.neig[idnode,j])
 				deltaT=T[ng] - T[idnode]
-				dT_dt[idnode]+= G*deltaT *C
+				dT_dt[idnode]+= G*deltaT				
 				j+=1
-	
+			dT_dt[idnode]=dT_dt[idnode] * C
+
 	def champs_reconstruct(self):
 		pass
 
