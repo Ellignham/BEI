@@ -30,8 +30,8 @@ class Init(Input):
         self.x = np.linspace(0,self.Lx/2,self.Nptsx)
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
-        self.nodes = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,3))
-        self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,4+self.ntheta))
+        self.nodes = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,3))
+        self.neig = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,4+self.ntheta))
 
     def domain_cart(self):
         """
@@ -188,6 +188,7 @@ class Init(Input):
                     self.neig[id_node,2]=id_node+1
                     self.neig[id_node,3]=self.Nptsx-1-r
                     self.neig[id_node,4]=id_node+self.Nptsx-1
+                    self.neig[id_node,5]=-1
                     self.neig[self.Nptsx-1-r,4]=id_node
                     self.neig[self.Nptsx-1-r,5]=-1
                 #center of the circle
@@ -226,6 +227,82 @@ class Init(Input):
                     self.neig[id_node,4]=-1
                     self.neig[self.Nptsx-1,2+theta]=id_node
                     self.neig[self.Nptsx-1,3+theta]=-1
+        # Create upper circle part
+        for theta in range(1,self.ntheta+1):
+            for r in range(1,self.Nptsx):
+                #update the id of the node
+                id_node+=1
+                #nodes
+                self.nodes[id_node,0]=id_node
+                self.nodes[id_node,1]=self.Ly-self.Lx/2+self.x[r]*math.sin(theta*angle)
+                self.nodes[id_node,2]=self.Lx/2-self.x[r]*math.cos(theta*angle)
+                #neighbor
+                self.neig[id_node,0]=id_node
+                if (r>1 and r<self.Nptsx-1 and theta>1 and theta<self.ntheta):
+                    self.neig[id_node,1]=id_node-1
+                    self.neig[id_node,2]=id_node+1
+                    self.neig[id_node,3]=id_node+self.Nptsx-1
+                    self.neig[id_node,4]=id_node-self.Nptsx+1
+                    self.neig[id_node,5]=-1
+                #border of the circle
+                elif (r==self.Nptsx-1 and theta>1 and theta<self.ntheta):
+                    self.neig[id_node,1]=id_node-1
+                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,3]=id_node-self.Nptsx+1
+                    self.neig[id_node,4]=-1
+                #right boundary
+                elif (r>1 and r<self.Nptsx-1 and theta==self.ntheta):
+                    self.neig[id_node,1]=id_node-1
+                    self.neig[id_node,2]=id_node+1
+                    self.neig[id_node,3]=id_node-self.Nptsx+1
+                    self.neig[id_node,4]=-1
+                #lower boundary
+                elif (r>1 and r<self.Nptsx-1 and theta==1 ):
+                    self.neig[id_node,1]=id_node-1
+                    self.neig[id_node,2]=id_node+1
+                    self.neig[id_node,3]=self.Nptsy*self.Nptsx-1-r
+                    self.neig[id_node,4]=id_node+self.Nptsx-1
+                    self.neig[id_node,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1-r,4]=id_node
+                    self.neig[self.Nptsy*self.Nptsx-1-r,5]=-1
+                #center of the circle
+                elif (r==1 and theta>1 and theta<self.ntheta):
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,3]=id_node-self.Nptsx+1
+                    self.neig[id_node,4]=self.Nptsx*self.Nptsy-1
+                    self.neig[id_node,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1,2+theta]=id_node
+                #corners
+                elif (r==self.Nptsx-1 and theta==1):
+                    self.neig[id_node,1]=id_node-1
+                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,3]=self.Nptsx*(self.Nptsy-1)
+                    self.neig[id_node,4]=-1
+                    self.neig[self.Nptsx*(self.Nptsy-1),3]=id_node
+                    self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
+                elif (r==self.Nptsx-1 and theta==self.ntheta):
+                    self.neig[id_node,1]=id_node-1
+                    self.neig[id_node,2]=id_node-self.Nptsx+1
+                    self.neig[id_node,3]=-1
+                elif (r==1 and theta==1):
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,3]=self.Nptsy*self.Nptsx-2
+                    self.neig[id_node,4]=self.Nptsy*self.Nptsx-1
+                    self.neig[id_node,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-2,4]=id_node
+                    self.neig[self.Nptsy*self.Nptsx-2,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1,3]=id_node
+                elif (r==1 and theta==self.ntheta):
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-self.Nptsx+1
+                    self.neig[id_node,3]=self.Nptsy*self.Nptsx-1
+                    self.neig[id_node,4]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1,2+theta]=id_node
+                    self.neig[self.Nptsy*self.Nptsx-1,3+theta]=-1
+
+
         print(self.nodes)
         print(self.neig)
  
@@ -235,7 +312,7 @@ class Init(Input):
         for i, txt in enumerate(self.nodes[:,0]):
             ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
         plt.xlim(0,0.5)
-        plt.ylim(0,1)
+        plt.ylim(9,10)
       #  plt.ylim(8,10.5)
       #  plt.xlim(0.5,1.4)
         plt.show()
@@ -260,15 +337,15 @@ class Init(Input):
         """
         
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
         
         #Creation of the pressure array
-        self.pres = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta)) 
+        self.pres = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta)) 
         self.pres[:] = self.pfluid_init 
         
         #Creation of the velocity fields
-        self.U = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
-        self.V = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta))
+        self.U = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
+        self.V = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
         self.U[:]=self.ufluid_init
         self.V[:]=self.vfluid_init
 
@@ -281,7 +358,7 @@ class Init(Input):
         self.C = np.zeros((self.Nptsy*self.Nptsx))
     
     def initemp_cart(self):
-        for k in range(0,self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta):
+        for k in range(0,self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta):
             if int(self.nodes[k,1])<self.Ly/2 :
                 self.temp[k]=self.T1
             else :
