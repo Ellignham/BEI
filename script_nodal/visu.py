@@ -23,23 +23,27 @@ import math as math
 def lecture_champs(fname):
 	"""
 	Reads the temporal evolution of the field contained in ResultArray.dat
+	et sort temps, et tableau de température
 	"""
 	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
-	print data
-	# ~ return data
+	temps=data[:,0]
+	temperature=data[:,1:]
+	# ~ print temperature
+	return temps, temperature
 	
 
 
-def plot_champs(champs):
+def plot_champs(dom, champs, time):
 	""" 
 	Plots a surface view of a field. The field must be of the form defines in Reservoir
 	"""
 	plt.figure() 
-	plt.imshow(self.temp.reshape((self.Nptsy,self.Nptsx)),extent=(self.x.min(), self.x.max(), self.y.max(), self.y.min()), interpolation='nearest',cmap=cm.gist_rainbow)
+	plt.contourf(dom.meshx, dom.meshy, champs)
 	plt.colorbar()
 	plt.xlabel('x')
 	plt.ylabel('y')
-	plt.title('Temperature')
+	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
+	plt.show()
 
 
 
