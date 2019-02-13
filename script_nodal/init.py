@@ -356,9 +356,16 @@ class Init(Input):
         #Creation of thermal capacity array
         self.C = np.zeros((self.Nptsy*self.Nptsx))
     
-    def initemp_cart(self):
+    def initemp_cart_y(self):
         for k in range(0,self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta):
             if int(self.nodes[k,1])<self.Ly/2 :
+                self.temp[k]=self.T1
+            else :
+                self.temp[k]=self.tfluid_init
+    
+    def initemp_cart_x(self):
+        for k in range(0,self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta):
+            if int(self.nodes[k,2])<self.Lx/4 :
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=self.tfluid_init

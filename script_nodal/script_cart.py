@@ -13,12 +13,12 @@ import NumericalProblemClass as PbDef
 #Class
 from input import Input
 from init import Init
+from pops import Reservoir
+
 
 		#~ INITIALISATION 
 
 Reservoir1=Reservoir()
-#~ Reservoir1.systeme_init_cart()
-
 
 		#~ INTEGRATION TEMPORELLE ET ECRITURE
 		
@@ -26,7 +26,7 @@ ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy
 listVar=[i for i in range(ProblemSize)]
 # ~ listVar=[0,1]
 AdapTimeStepBool=False
-Duration=60.
+Duration=6.
 MAXNTIMESTEP=100001 
 TIMESTEP=0.002
 METHODE='Euler'
