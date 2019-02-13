@@ -31,7 +31,8 @@ class Init(Input):
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
         self.nodes = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,3))
-        self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,4+self.ntheta))
+        # ~ self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,4+self.ntheta))
+        self.neig = np.zeros((self.Nptsx*self.Nptsy+self.Nptsx*self.ntheta,6))
 
     def domain_cart(self):
         """
@@ -306,5 +307,5 @@ class Init(Input):
 
 
 
-test=Init()
-test.domain_tank()
+# ~ test=Init()
+# ~ test.domain_tank()
