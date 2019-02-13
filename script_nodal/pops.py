@@ -25,12 +25,6 @@ class Reservoir(Init) :
 		self.temp2d=np.zeros((self.Nptsx,self.Nptsy))
 		self.meshx, self.meshy = np.meshgrid(self.x, self.y)
 
-		
-		
-
-
-
-
 	def systeme_init_cart(self, temp) :
 		self.domain_cart()
 		self.init_domain()
@@ -58,44 +52,5 @@ class Reservoir(Init) :
 	
 	def champs_reconstruct(self):
 		pass
-
-
-		#~ INITIALISATION 
-
-Reservoir1=Reservoir()
-#~ Reservoir1.systeme_init_cart()
-
-
-		#~ INTEGRATION TEMPORELLE ET ECRITURE
-		
-ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy
-listVar=[i for i in range(ProblemSize)]
-# ~ listVar=[0,1]
-AdapTimeStepBool=False
-Duration=60.
-MAXNTIMESTEP=100001 
-TIMESTEP=0.002
-METHODE='Euler'
-ListOfVariablesToSave=listVar
-SavedIteration=100
-Error=1e-8
-
-Problem=PbDef.NumericalProblem(Reservoir1.systeme_init_cart,Reservoir1.systeme_cond,METHODE,\
-MAXNTIMESTEP,ProblemSize,TimeStep=TIMESTEP,\
-Duration=Duration,AdaptativeTimeStep=AdapTimeStepBool,\
-NbIterationSaved=SavedIteration,\
-ListOfIdVar=ListOfVariablesToSave,AdatativeTimeStep_Error=Error)
-
-Problem.SolveDifferentialProblem()
-
-
-		# ~ TRACE DES DONNEES
-		
-		
-exec(open("./visu.py").read())
-temps, temp = lecture_champs('ResultArray.dat')
-
-Reservoir1.temp2d = temp[-1].reshape((50, 5))
-plot_champs(Reservoir1, Reservoir1.temp2d, temps[-1])
 
 

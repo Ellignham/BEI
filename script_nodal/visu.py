@@ -23,7 +23,7 @@ import math as math
 def lecture_champs(fname):
 	"""
 	Reads the temporal evolution of the field contained in ResultArray.dat
-	et sort temps, et tableau de température
+	return temps, and temperature table
 	"""
 	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
 	temps=data[:,0]
