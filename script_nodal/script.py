@@ -14,14 +14,14 @@ from debug import Debug
 from visu import Visu
 
 simu=Visu()
-#simu.init_domain()
+simu.domain_tank()
 #simu.resistance()
 #simu.write_temp()
 #simu.write_pres()
 #simu.plot_temp()
 #simu.plot_pres()
 
-simu.domain_cart()
+#simu.domain_cart()
 #simu.detect_neig()
 
 if simu.debug :

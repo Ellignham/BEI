@@ -30,8 +30,13 @@ class Init(Input):
         self.x = np.linspace(0,self.Lx/2,self.Nptsx)
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
-        self.nodes = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,3))
-        self.neig = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta,6+self.ntheta))
+        if (self.mesh_type=='cart'):
+            self.nodes = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,3))
+            self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,6+self.ntheta))
+        else:
+            self.nodes = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,3))
+            self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,4+self.ntheta))
+
 
     def domain_cart(self):
         """
@@ -329,22 +334,22 @@ class Init(Input):
         U           : array containing the x velocity field [m/s]
         V           : array containing the y velocity field [m/s]
 
-        R          : array containing the conduction thermal resistance [K.m/W]
-        C          : array containing the conduction thermal capacity
+        R           : array containing the conduction thermal resistance [K.m/W]
+        C           : array containing the conduction thermal capacity
 
-
+        phi         : array describing whether the fluid is liquid or gas 
         """
         
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         
         #Creation of the pressure array
-        self.pres = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta)) 
+        self.pres = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta)) 
         self.pres[:] = self.pfluid_init 
         
         #Creation of the velocity fields
-        self.U = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
-        self.V = np.zeros((self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta))
+        self.U = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+        self.V = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         self.U[:]=self.ufluid_init
         self.V[:]=self.vfluid_init
 
@@ -355,17 +360,20 @@ class Init(Input):
         
         #Creation of thermal capacity array
         self.C = np.zeros((self.Nptsy*self.Nptsx))
-    
+   
+        #Creation of the phase array
+        self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+ 
     def initemp_cart_y(self):
-        for k in range(0,self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta):
-            if int(self.nodes[k,1])<self.Ly/2 :
+        for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
+            if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=self.tfluid_init
     
     def initemp_cart_x(self):
-        for k in range(0,self.Nptsx*self.Nptsy+(self.Nptsx+2)*self.ntheta):
-            if int(self.nodes[k,2])<self.Lx/4 :
+        for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
+            if self.nodes[k,2]<self.Lx/4:
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=self.tfluid_init
@@ -395,5 +403,5 @@ class Init(Input):
 
 
 
-# ~ test=Init()
-# ~ test.domain_tank()
+#test=Init()
+#test.domain_tank()
