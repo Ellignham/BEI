@@ -354,9 +354,8 @@ class Init(Input):
         self.V[:]=self.vfluid_init
 
         #Creation of thermal resistance arrays
-        self.Rx = np.zeros(self.Nptsy*(self.Nptsx-1))
-        self.Ry = np.zeros((self.Nptsy-1)*self.Nptsx)
         self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
+        #~ np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         
         #Creation of thermal capacity array
         self.C = np.zeros((self.Nptsy*self.Nptsx))
@@ -395,11 +394,19 @@ class Init(Input):
                 self.R[idnode,j]= res
                 j+=1
 
+			
+    def resistance_dom(self):
+		pass
+		#~ self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
+		
+
+
     def capacite_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         for idnode in range(self.Nptsy*self.Nptsx) :
             self.C[idnode] = self.rho*self.cp*dx*dy
+
 
 
 
