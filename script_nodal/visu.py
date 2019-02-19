@@ -31,11 +31,31 @@ def lecture_champs(fname):
 	# ~ print temperature
 	return temps, temperature
 	
+	
+	
+
+def reconstruct_champs(dom,fname):
+	"""
+	Reads the temporal evolution of the field contained in ResultArray.dat
+	return temps, and temperature table
+	"""
+	x=np.zeros()
+	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
+	temps=data[:,0]
+	temperature=data[:,1:]
+	for idnode in range(len(temperature[0])):
+		pass
+		
+	
+	
+	# ~ print temperature
+	return temps, temperature
+	
 
 
-def plot_champs(dom, champs, time):
+def plot_champs_cart(dom, champs, time):
 	""" 
-	Plots a surface view of a field. The field must be of the form defines in Reservoir
+	Plots a surface view of a cartesian field. The field must be of the form defined in Reservoir
 	"""
 	plt.figure() 
 	plt.contourf(dom.meshx, dom.meshy, champs)
@@ -44,6 +64,21 @@ def plot_champs(dom, champs, time):
 	plt.ylabel('y')
 	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
 	plt.show()
+
+
+def plot_champs_res(dom, champs, time):
+	""" 
+	Plots a surface view of a reservoir-like geometry field. The field must be of the form defined in Reservoir
+	"""
+	plt.figure() 
+	plt.contourf(dom.meshx, dom.meshy, champs)
+	plt.colorbar()
+	plt.xlabel('x')
+	plt.ylabel('y')
+	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
+	plt.show()
+
+
 
 
 
