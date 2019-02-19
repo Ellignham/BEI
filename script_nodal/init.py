@@ -95,11 +95,12 @@ class Init(Input):
             -creation of the bottom 'circle part' centered on (Lx,Lx) using polar coordinates
             -creation of the upper 'circle part' centered on (Ly+Lx,Lx) using polar coordinates
 
+
+        angle   : angle between two consecutive lines of points for polar coordinats
+
         local variables :
        
             id_node : id of the node (used to create the 'cicrle parts') 
-            angle   : angle between two consecutive lines of points for polar coordinats
-
             r       : distance to the center of the 'circle' for polar coordinates
             theta   : angle relative to the border of the 'rectangle part' for polar coordinates
         """
@@ -157,7 +158,7 @@ class Init(Input):
         id_node=self.Nptsy*self.Nptsx-1 
         #Create lower 'cricle part'
        
-        angle=math.pi/(self.ntheta*2)
+        self.angle=math.pi/(self.ntheta*2)
 
         for theta in range(1,self.ntheta+1):
             for r in range(1,self.Nptsx):
@@ -165,8 +166,8 @@ class Init(Input):
                 id_node+=1
                 #nodes
                 self.nodes[id_node,0]=id_node
-                self.nodes[id_node,1]=self.Lx/2-self.x[r]*math.sin(theta*angle)
-                self.nodes[id_node,2]=self.Lx/2-self.x[r]*math.cos(theta*angle)
+                self.nodes[id_node,1]=self.Lx/2-self.x[r]*math.sin(theta*self.angle)
+                self.nodes[id_node,2]=self.Lx/2-self.x[r]*math.cos(theta*self.angle)
                 #neighbor
                 self.neig[id_node,0]=id_node
                 if (r>1 and r<self.Nptsx-1 and theta>1 and theta<self.ntheta):
@@ -239,8 +240,8 @@ class Init(Input):
                 id_node+=1
                 #nodes
                 self.nodes[id_node,0]=id_node
-                self.nodes[id_node,1]=self.Ly-self.Lx/2+self.x[r]*math.sin(theta*angle)
-                self.nodes[id_node,2]=self.Lx/2-self.x[r]*math.cos(theta*angle)
+                self.nodes[id_node,1]=self.Ly-self.Lx/2+self.x[r]*math.sin(theta*self.angle)
+                self.nodes[id_node,2]=self.Lx/2-self.x[r]*math.cos(theta*self.angle)
                 #neighbor
                 self.neig[id_node,0]=id_node
                 if (r>1 and r<self.Nptsx-1 and theta>1 and theta<self.ntheta):
@@ -307,8 +308,8 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,2+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=-1
 
-        print(self.nodes)
-        print(self.neig)
+  #      print(self.nodes)
+  #      print(self.neig)
  
         fig=plt.figure()
         ax = fig.add_subplot(111)
@@ -319,7 +320,7 @@ class Init(Input):
         plt.ylim(0,0.5)
       #  plt.ylim(8,10.5)
       #  plt.xlim(0.5,1.4)
-        plt.show()
+#        plt.show()
 
     def init_domain(self):
         """
@@ -359,7 +360,7 @@ class Init(Input):
         self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
         
         #Creation of thermal capacity array
-        self.C = np.zeros((self.Nptsy*self.Nptsx))
+        self.C = np.zeros((self.Nptsy*self.Nptsx+2*(self.Nptsx-1)*self.ntheta))
    
         #Creation of the phase array
         self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
@@ -401,7 +402,36 @@ class Init(Input):
         for idnode in range(self.Nptsy*self.Nptsx) :
             self.C[idnode] = self.rho*self.cp*dx*dy
 
+    def capacite_tank(self):
+        dx_cart=self.nodes[1,2] - self.nodes[0,2]
+        dy_cart=self.nodes[self.Nptsx,1] - self.nodes[0,1]
+        for idnode in range(0,self.Nptsy*self.Nptsx+2*(self.Nptsx-1)*self.ntheta):
+            #middle of the 'rectangle part'
+            if (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly-self.Lx):
+                self.C[idnode] = self.rho*self.cp*dx_cart*dy_cart
+            #lower boundary of the 'rectangle part'
+            elif (idnode<self.Nptsx-1):
+                self.C[idnode] = self.rho*self.cp*(dx_cart*dy_cart/2+self.angle/2*(2*dx_cart*math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))/2)
+            #lower right corner of the 'rectangle part'
+            elif (idnode==self.Nptsx-1):
+                self.C[idnode]=self.rho*self.cp*(dx_cart*dy_cart/2+math.pi/4*(dx_cart/2)**2)
+            #lower 'circle part'
+            elif (self.nodes[idnode,1]>self.Ly-self.Lx):
+                self.C[idnode] = self.rho*self.cp*(self.angle/2*(2*dx_cart*math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 )))
+            #upper boundary of the 'rectangle part' WIP
+            elif (idnode>self.Nptsx*(self.Nptsy-1)-1 and idnode<self.Nptsx*self.Nptsy-1):
+                self.C[idnode] = self.rho*self.cp*(dx_cart*dy_cart/2+self.angle/2*(2*dx_cart*math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))/2)
+            #upper right corner of the 'rectangle part'
+            elif (idnode==self.Nptsx*self.Nptsy-1):
+                self.C[idnode]=self.rho*self.cp*(dx_cart*dy_cart/2+math.pi/4*(dx_cart/2)**2)
+            #upper 'circle part'
+            elif (self.nodes[idnode,1]<self.Lx):
+                self.C[idnode] = self.rho*self.cp*(self.angle/2*(2*dx_cart*math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 )))
+
+
 
 
 #test=Init()
 #test.domain_tank()
+#test.init_domain()
+#test.capacite_tank()
