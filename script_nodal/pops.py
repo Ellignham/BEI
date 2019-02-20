@@ -29,7 +29,7 @@ class Reservoir(Init) :
 		self.domain_cart()
 		self.init_domain()
 		self.resistance_cart()
-		# ~ self.initemp_cart()
+	#	self.initemp_cart_y()
 		self.initemp_cart_x()
 		self.capacite_cart()
 		temp[:]=np.copy(self.temp)
