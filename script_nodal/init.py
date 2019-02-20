@@ -35,7 +35,7 @@ class Init(Input):
             self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,6+self.ntheta))
         else:
             self.nodes = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,3))
-            self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,4+self.ntheta))
+            self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,5+self.ntheta))
 
 
     def domain_cart(self):
@@ -172,8 +172,8 @@ class Init(Input):
                             
         self.neig[self.Nptsx-1,1]=self.Nptsx-2
         self.neig[self.Nptsx-1,2]=-3
-        self.neig[self.Nptsx-1,3]=2*self.Nptsx-1
-        self.neig[self.Nptsx-1,4]=-1
+        self.neig[self.Nptsx-1,3+self.ntheta]=2*self.Nptsx-1
+        self.neig[self.Nptsx-1,4+self.ntheta]=-1
 
         self.neig[self.Nptsx*(self.Nptsy-1),1]=-2     
         self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-1)+1
@@ -234,7 +234,7 @@ class Init(Input):
                     self.neig[id_node,3]=id_node+self.Nptsx-1
                     self.neig[id_node,4]=id_node-self.Nptsx+1
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsx-1,3+theta]=id_node
+                    self.neig[self.Nptsx-1,2+theta]=id_node
                 #corners
                 elif (r==self.Nptsx-1 and theta==1):
                     self.neig[id_node,1]=-2
@@ -256,15 +256,14 @@ class Init(Input):
                     self.neig[id_node,4]=self.Nptsx-2
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsx-2,3]=id_node
-                    self.neig[self.Nptsx-1,4]=id_node
+                    self.neig[self.Nptsx-1,3]=id_node
                 elif (r==1 and theta==self.ntheta):
                     self.neig[id_node,1]=id_node+1
                     self.neig[id_node,2]=self.Nptsx-1
                     self.neig[id_node,3]=-3
                     self.neig[id_node,4]=id_node-self.Nptsx+1
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsx-1,3+theta]=id_node
-                    self.neig[self.Nptsx-1,4+theta]=-1
+                    self.neig[self.Nptsx-1,2+theta]=id_node
         
         # Create upper circle part
         for theta in range(1,self.ntheta+1):
@@ -354,7 +353,7 @@ class Init(Input):
         for i, txt in enumerate(self.nodes[:,0]):
             ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
         plt.xlim(0,0.5)
-        plt.ylim(9.5,10)
+        plt.ylim(0,0.5)
       #  plt.ylim(8,10.5)
       #  plt.xlim(0.5,1.4)
         plt.show()
