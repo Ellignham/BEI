@@ -21,8 +21,8 @@ class Init(Input):
         y           : variable containing the y position of the nodes 
         
         nodes       : |id of node|y position of node|x position of node|
-        neig        : |id of node|neighbor 1|neighbor 2| ...  if neighbor = -1 : boundary
-
+        neig        : |id of node|neighbor 1|neighbor 2| ...  
+                      in neig : -1 = no more neighbors, -2 = wall, -3 = symetry
         """
         
         Input.__init__(self)
@@ -101,8 +101,19 @@ class Init(Input):
         local variables :
        
             id_node : id of the node (used to create the 'cicrle parts') 
+
             r       : distance to the center of the 'circle' for polar coordinates
             theta   : angle relative to the border of the 'rectangle part' for polar coordinates
+
+
+        Postion for neighbors
+
+                 4
+                 |
+            1 -- 0 -- 2
+                 |
+                 3
+
         """
        
         assert (self.ntheta > 0), "ntheta must be >0 to use the tank shape" 
@@ -128,32 +139,51 @@ class Init(Input):
                 elif (j==0 and i>0 and i<self.Nptsx-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
-                    self.neig[i+j*self.Nptsx,3]=i+(j+1)*self.Nptsx
-                    self.neig[i+j*self.Nptsx,4]=-1
+                    self.neig[i+j*self.Nptsx,3]=-1 #temporary -1
+                    self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,5]=-1
                 #upper boundary
                 elif (j==self.Nptsy-1 and i>0 and i<self.Nptsx-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
-                    self.neig[i+j*self.Nptsx,4]=-1
+                    self.neig[i+j*self.Nptsx,4]=-1 #temporary -1
+                    self.neig[i+j*self.Nptsx,5]=-1
                 #left boundary
                 elif (i==0 and j>0 and j<self.Nptsy-1):
-                    self.neig[i+j*self.Nptsx,1]=i+1+j*self.Nptsx 
-                    self.neig[i+j*self.Nptsx,2]=i+(j-1)*self.Nptsx
-                    self.neig[i+j*self.Nptsx,3]=i+(j+1)*self.Nptsx
-                    self.neig[i+j*self.Nptsx,4]=-1
+                    self.neig[i+j*self.Nptsx,1]=-2
+                    self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx 
+                    self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,5]=-1
                 #right boundary
                 elif (i==self.Nptsx-1 and j>0 and j<self.Nptsy-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
-                    self.neig[i+j*self.Nptsx,2]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,2]=-3
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
-                    self.neig[i+j*self.Nptsx,4]=-1
+                    self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
+                    self.neig[i+j*self.Nptsx,5]=-1
         #corners
-        self.neig[0,1]=1; self.neig[0,2]=self.Nptsx;self.neig[0,3]=-1                            
-        self.neig[self.Nptsx-1,1]=self.Nptsx-2; self.neig[self.Nptsx-1,2]=2*self.Nptsx-1;self.neig[self.Nptsx-1,3]=-1
-      
-        self.neig[self.Nptsx*(self.Nptsy-1),1]=self.Nptsx*(self.Nptsy-1)+1; self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-2);self.neig[self.Nptsx*(self.Nptsy-1),3]=-1
-        self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2; self.neig[self.Nptsx*self.Nptsy-1,2]=self.Nptsx*(self.Nptsy-1)-1;self.neig[self.Nptsx*self.Nptsy-1,3]=-1
+        self.neig[0,1]=-2
+        self.neig[0,2]=1
+        self.neig[0,3]=-1 #temporary -1
+        self.neig[0,4]=self.Nptsx
+        self.neig[0,5]=-1
+                            
+        self.neig[self.Nptsx-1,1]=self.Nptsx-2
+        self.neig[self.Nptsx-1,2]=-3
+        self.neig[self.Nptsx-1,3]=2*self.Nptsx-1
+        self.neig[self.Nptsx-1,4]=-1
+
+        self.neig[self.Nptsx*(self.Nptsy-1),1]=-2     
+        self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-1)+1
+        self.neig[self.Nptsx*(self.Nptsy-1),3]=self.Nptsx*(self.Nptsy-2)
+        self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
+        
+        self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2
+        self.neig[self.Nptsx*self.Nptsy-1,2]=-3
+        self.neig[self.Nptsx*self.Nptsy-1,3]=self.Nptsx*(self.Nptsy-1)-1
+        self.neig[self.Nptsx*self.Nptsy-1,4]=-1
    
         id_node=self.Nptsy*self.Nptsx-1 
         #Create lower 'cricle part'
@@ -171,67 +201,70 @@ class Init(Input):
                 #neighbor
                 self.neig[id_node,0]=id_node
                 if (r>1 and r<self.Nptsx-1 and theta>1 and theta<self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+1
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=id_node+self.Nptsx-1
                     self.neig[id_node,4]=id_node-self.Nptsx+1
                     self.neig[id_node,5]=-1
                 #border of the circle
                 elif (r==self.Nptsx-1 and theta>1 and theta<self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
-                    self.neig[id_node,3]=id_node-self.Nptsx+1
-                    self.neig[id_node,4]=-1
+                    self.neig[id_node,1]=-2
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=id_node+self.Nptsx-1
+                    self.neig[id_node,4]=id_node-self.Nptsx+1
+                    self.neig[id_node,5]=-1
                 #right boundary
                 elif (r>1 and r<self.Nptsx-1 and theta==self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+1
-                    self.neig[id_node,3]=id_node+self.Nptsx-1
-                    self.neig[id_node,4]=-1
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=-3
+                    self.neig[id_node,4]=id_node-self.Nptsx+1
+                    self.neig[id_node,5]=-1
                 #upper boundary
                 elif (r>1 and r<self.Nptsx-1 and theta==1 ):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+1
-                    self.neig[id_node,3]=self.Nptsx-1-r
-                    self.neig[id_node,4]=id_node+self.Nptsx-1
-                    self.neig[self.Nptsx-1-r,4]=id_node
-                    self.neig[self.Nptsx-1-r,5]=-1
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=id_node+self.Nptsx-1
+                    self.neig[id_node,4]=self.Nptsx-1-r
+                    self.neig[self.Nptsx-1-r,3]=id_node
                 #center of the circle
                 elif (r==1 and theta>1 and theta<self.ntheta):
                     self.neig[id_node,1]=id_node+1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
-                    self.neig[id_node,3]=id_node-self.Nptsx+1
-                    self.neig[id_node,4]=self.Nptsx-1
+                    self.neig[id_node,2]=self.Nptsx-1
+                    self.neig[id_node,3]=id_node+self.Nptsx-1
+                    self.neig[id_node,4]=id_node-self.Nptsx+1
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsx-1,2+theta]=id_node
+                    self.neig[self.Nptsx-1,3+theta]=id_node
                 #corners
                 elif (r==self.Nptsx-1 and theta==1):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
-                    self.neig[id_node,3]=0
-                    self.neig[id_node,4]=-1
+                    self.neig[id_node,1]=-2
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=id_node+self.Nptsx-1
+                    self.neig[id_node,4]=0
+                    self.neig[id_node,5]=-1
                     self.neig[0,3]=id_node
-                    self.neig[0,4]=-1
                 elif (r==self.Nptsx-1 and theta==self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node-self.Nptsx+1
-                    self.neig[id_node,3]=-1
+                    self.neig[id_node,1]=-2
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=-3
+                    self.neig[id_node,4]=id_node-self.Nptsx+1
+                    self.neig[id_node,5]=-1
                 elif (r==1 and theta==1):
                     self.neig[id_node,1]=id_node+1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
-                    self.neig[id_node,3]=self.Nptsx-2
-                    self.neig[id_node,4]=self.Nptsx-1
+                    self.neig[id_node,2]=self.Nptsx-1
+                    self.neig[id_node,3]=id_node+self.Nptsx-1
+                    self.neig[id_node,4]=self.Nptsx-2
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsx-2,4]=id_node
-                    self.neig[self.Nptsx-2,5]=-1
-                    self.neig[self.Nptsx-1,3]=id_node
+                    self.neig[self.Nptsx-2,3]=id_node
+                    self.neig[self.Nptsx-1,4]=id_node
                 elif (r==1 and theta==self.ntheta):
                     self.neig[id_node,1]=id_node+1
-                    self.neig[id_node,2]=id_node-self.Nptsx+1
-                    self.neig[id_node,3]=self.Nptsx-1
-                    self.neig[id_node,4]=-1
-                    self.neig[self.Nptsx-1,2+theta]=id_node
-                    self.neig[self.Nptsx-1,3+theta]=-1
+                    self.neig[id_node,2]=self.Nptsx-1
+                    self.neig[id_node,3]=-3
+                    self.neig[id_node,4]=id_node-self.Nptsx+1
+                    self.neig[id_node,5]=-1
+                    self.neig[self.Nptsx-1,3+theta]=id_node
+                    self.neig[self.Nptsx-1,4+theta]=-1
         
         # Create upper circle part
         for theta in range(1,self.ntheta+1):
@@ -245,52 +278,56 @@ class Init(Input):
                 #neighbor
                 self.neig[id_node,0]=id_node
                 if (r>1 and r<self.Nptsx-1 and theta>1 and theta<self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+1
-                    self.neig[id_node,3]=id_node+self.Nptsx-1
-                    self.neig[id_node,4]=id_node-self.Nptsx+1
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=id_node-self.Nptsx+1
+                    self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
                 #border of the circle
                 elif (r==self.Nptsx-1 and theta>1 and theta<self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,1]=-2
+                    self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=id_node-self.Nptsx+1
-                    self.neig[id_node,4]=-1
+                    self.neig[id_node,4]=id_node+self.Nptsx-1
+                    self.neig[id_node,5]=-1
                 #right boundary
                 elif (r>1 and r<self.Nptsx-1 and theta==self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+1
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=id_node-self.Nptsx+1
-                    self.neig[id_node,4]=-1
+                    self.neig[id_node,4]=-3
+                    self.neig[id_node,5]=-1
                 #lower boundary
                 elif (r>1 and r<self.Nptsx-1 and theta==1 ):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+1
+                    self.neig[id_node,1]=id_node+1
+                    self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=self.Nptsy*self.Nptsx-1-r
                     self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsy*self.Nptsx-1-r,4]=id_node
-                    self.neig[self.Nptsy*self.Nptsx-1-r,5]=-1
                 #center of the circle
                 elif (r==1 and theta>1 and theta<self.ntheta):
                     self.neig[id_node,1]=id_node+1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,2]=self.Nptsx*self.Nptsy-1
                     self.neig[id_node,3]=id_node-self.Nptsx+1
-                    self.neig[id_node,4]=self.Nptsx*self.Nptsy-1
+                    self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsy*self.Nptsx-1,2+theta]=id_node
+                    self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                 #corners
                 elif (r==self.Nptsx-1 and theta==1):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node+self.Nptsx-1
+                    self.neig[id_node,1]=-2
+                    self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=self.Nptsx*(self.Nptsy-1)
-                    self.neig[id_node,4]=-1
+                    self.neig[id_node,4]=id_node+self.Nptsx-1
+                    self.neig[id_node,5]=-1
                     self.neig[self.Nptsx*(self.Nptsy-1),3]=id_node
                     self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
                 elif (r==self.Nptsx-1 and theta==self.ntheta):
-                    self.neig[id_node,1]=id_node-1
-                    self.neig[id_node,2]=id_node-self.Nptsx+1
-                    self.neig[id_node,3]=-1
+                    self.neig[id_node,1]=-2
+                    self.neig[id_node,2]=id_node-1
+                    self.neig[id_node,3]=id_node-self.Nptsx+1
+                    self.neig[id_node,4]=-3
+                    self.neig[id_node,5]=-1
                 elif (r==1 and theta==1):
                     self.neig[id_node,1]=id_node+1
                     self.neig[id_node,2]=id_node+self.Nptsx-1
@@ -298,18 +335,18 @@ class Init(Input):
                     self.neig[id_node,4]=self.Nptsy*self.Nptsx-1
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsy*self.Nptsx-2,4]=id_node
-                    self.neig[self.Nptsy*self.Nptsx-2,5]=-1
-                    self.neig[self.Nptsy*self.Nptsx-1,3]=id_node
+                    self.neig[self.Nptsy*self.Nptsx-1,4]=id_node
                 elif (r==1 and theta==self.ntheta):
                     self.neig[id_node,1]=id_node+1
-                    self.neig[id_node,2]=id_node-self.Nptsx+1
-                    self.neig[id_node,3]=self.Nptsy*self.Nptsx-1
-                    self.neig[id_node,4]=-1
-                    self.neig[self.Nptsy*self.Nptsx-1,2+theta]=id_node
-                    self.neig[self.Nptsy*self.Nptsx-1,3+theta]=-1
+                    self.neig[id_node,2]=self.Nptsy*self.Nptsx-1
+                    self.neig[id_node,3]=id_node-self.Nptsx+1
+                    self.neig[id_node,4]=-3
+                    self.neig[id_node,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
+                    self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
 
   #      print(self.nodes)
-  #      print(self.neig)
+        print(self.neig)
  
         fig=plt.figure()
         ax = fig.add_subplot(111)
@@ -317,10 +354,10 @@ class Init(Input):
         for i, txt in enumerate(self.nodes[:,0]):
             ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
         plt.xlim(0,0.5)
-        plt.ylim(0,0.5)
+        plt.ylim(9.5,10)
       #  plt.ylim(8,10.5)
       #  plt.xlim(0.5,1.4)
-#        plt.show()
+        plt.show()
 
     def init_domain(self):
         """
@@ -397,8 +434,8 @@ class Init(Input):
 
 			
     def resistance_dom(self):
-		pass
-		#~ self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
+	    pass
+        #~ self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
 		
 
 
@@ -438,7 +475,7 @@ class Init(Input):
 
 
 
-#test=Init()
-#test.domain_tank()
+test=Init()
+test.domain_tank()
 #test.init_domain()
 #test.capacite_tank()
