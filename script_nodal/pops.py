@@ -24,13 +24,16 @@ class Reservoir(Init) :
 		Init.__init__(self)
 		self.temp2d=np.zeros((self.Nptsx,self.Nptsy))
 		self.meshx, self.meshy = np.meshgrid(self.x, self.y)
-
+		self.domain=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
 	def systeme_init_cart(self, temp) :
 		self.domain_cart()
 		self.init_domain()
+		self.domain[:,0]=self.nodes[:,2]
+		self.domain[:,1]=self.nodes[:,1]
 		self.resistance_cart()
 		# ~ self.initemp_cart()
 		self.initemp_cart_x()
+		self.initemp_cart_y()
 		self.capacite_cart()
 		temp[:]=np.copy(self.temp)
 		#~ print()
