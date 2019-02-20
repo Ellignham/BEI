@@ -425,16 +425,16 @@ class Init(Input):
                 j+=1
 
 			
-    def resistance_dom(self):
+    def resistance_tank(self):
         print('Computing Thermal Resistance for the domain...')
-		dx=self.nodes[1,2] - self.nodes[0,2]
-		dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
-		self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
-		for idnode in range(self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta) :
+        dx=self.nodes[1,2] - self.nodes[0,2]
+        dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
+        self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
+        for idnode in range(self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta) :
             
             #POINT CENTRE DU BAS
-            if idnode == self.Nptx - 1) :
-				self.R[idnode,0] = idnode
+            if (idnode == self.Nptsx - 1) :
+                self.R[idnode,0] = idnode
                 #~ voisin gauche
                 j=1
                 ng=int(self.neig[idnode,j])
@@ -443,15 +443,15 @@ class Init(Input):
                 for j in range(3,self.ntheta+3) :
                     ng=int(self.neig[idnode,j])
                     rng=np.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
-                    self.R[idnode,j] = r / (self.k * r*sin(self.angle))
+                    self.R[idnode,j] = rng / (self.k * rng*np.sin(self.angle))
                 j+=1
                 #~ voisin haut
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (self.k * dy)
 
             #POINT CENTRE DU HAUT
-            if idnode == self.Npty*self.Nptx - 1) :
-				self.R[idnode,0] = idnode
+            if (idnode == self.Nptsy*self.Nptsx - 1) :
+                self.R[idnode,0] = idnode
                 #~ voisin gauche
                 j=1
                 ng=int(self.neig[idnode,j])
@@ -464,7 +464,7 @@ class Init(Input):
                 for j in range(4,self.ntheta+3) :
                     ng=int(self.neig[idnode,j])
                     rng=np.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
-                    self.R[idnode,j] = r / (self.k * r*sin(self.angle))
+                    self.R[idnode,j] = rng / (self.k * rng*np.sin(self.angle))
 
 
                 
@@ -486,7 +486,7 @@ class Init(Input):
 					j+=1
                     
 			#~ PARTIE POLAIRE
-			else :
+            else :
 				rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
 				j=1
 				self.R[idnode,0] = idnode
@@ -544,7 +544,9 @@ class Init(Input):
 
 
 
-#test=Init()
-#test.domain_tank()
-#test.init_domain()
-#test.capacite_tank()
+test=Init()
+test.domain_tank()
+test.init_domain()
+test.capacite_tank()
+test.resistance_tank()
+print(self.R)
