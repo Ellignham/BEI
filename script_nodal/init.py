@@ -318,9 +318,11 @@ class Init(Input):
             ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
         plt.xlim(0,0.5)
         plt.ylim(0,0.5)
-      #  plt.ylim(8,10.5)
-      #  plt.xlim(0.5,1.4)
+        #~ plt.ylim(8,10.5)
+        #~ plt.xlim(0.5,1.4)
 #        plt.show()
+
+
 
     def init_domain(self):
         """
@@ -398,16 +400,58 @@ class Init(Input):
 
 			
     def resistance_dom(self):
-		pass
-		#~ self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
-		
+		dx=self.nodes[1,2] - self.nodes[0,2]
+		dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
+		self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
+		for idnode in range(self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta) :
+            if idnode == self.Nptx - 1) :
+                pass#point du bas
+            if idnode == self.Npty*self.Nptx - 1) :
+                pass#point du haut
+            elif (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly - self.Lx) :
+			#~ Partie Resctangle
+				j=1
+				self.R[idnode,0] = idnode
+				while ((int(self.neig[idnode,j]) != -1)):
+					ng=int(self.neig[idnode,j])
+					if (ng != -3 and ng !=-2) :
+						if j<3:
+							res = dx /(self.k * dy)
+						else :
+							dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+							dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])
+							l=np.sqrt(dxx**2 + dyy**2)
+							res= dy / (self.k * dx)
+						self.R[idnode,j]= res
+					j+=1
+			#~ Partie Cylindrique
+			else :
+				rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
+				j=1
+				self.R[idnode,0] = idnode
+				while ((int(self.neig[idnode,j]) != -1)):
+					ng=int(self.neig[idnode,j])
+					if (ng != -3 and ng !=-2) :
+						if j<3:
+							rng=min(math.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 ), math.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )) 
+							r2=max(rnode,rng)
+							r1=min(rnode,rng)
+							res = np.log(r2/r1)/(2*np.pi*self.k)
+						else : 
+							dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+							dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
+							l=np.sqrt(dxx**2 + dyy**2)
+							res= dy / (self.k * dx)
+					j+=1
+
+
 
 
     def capacite_cart(self):
-        dx=self.nodes[1,2] - self.nodes[0,2]
-        dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
-        for idnode in range(self.Nptsy*self.Nptsx) :
-            self.C[idnode] = self.rho*self.cp*dx*dy
+		dx=self.nodes[1,2] - self.nodes[0,2]
+		dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
+		for idnode in range(self.Nptsy*self.Nptsx) :
+			self.C[idnode] = self.rho*self.cp*dx*dy
 
     def capacite_tank(self):
         dx_cart=self.nodes[1,2] - self.nodes[0,2]
@@ -434,9 +478,6 @@ class Init(Input):
             #upper 'circle part'
             elif (self.nodes[idnode,1]<self.Lx):
                 self.C[idnode] = self.rho*self.cp*(self.angle/2*(2*dx_cart*math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 )))
-
-
-
 
 
 #test=Init()

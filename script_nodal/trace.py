@@ -20,6 +20,7 @@ Reservoir1=Reservoir()
 Reservoir1.domain_tank()
 Reservoir1.init_domain()
 Reservoir1.initemp_cart_x()
+Reservoir1.resistance_dom()
 typ='tot'
 
 exec(open("./visu.py").read())
