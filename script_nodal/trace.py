@@ -10,7 +10,6 @@ sys.path.append(LibPath)
 import NumericalProblemClass as PbDef
 
 
-print 'toto'
 #Class
 from input import Input
 from init import Init
@@ -18,7 +17,10 @@ from pops import Reservoir
 
 
 Reservoir1=Reservoir()
-typ='cart'
+Reservoir1.domain_tank()
+Reservoir1.init_domain()
+Reservoir1.initemp_cart_x()
+typ='tot'
 
 exec(open("./visu.py").read())
 if os.path.isfile('./ResultArray.dat') : 
@@ -29,8 +31,9 @@ if os.path.isfile('./ResultArray.dat') :
 		plot_champs_cart(Reservoir1, Reservoir1.temp2d, temps[-1])
 	else :
 		#~Version totale 
-		Reservoir1.temp2d = temp[-1]
-		plot_champs_res(Reservoir1, Reservoir1.temp2d, temps[-1])
+		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
+		#~ Reservoir1.temp2d=Reservoir1.temp
+		plot_champs_res(x, y, Reservoir1.temp, 3.)
 	
 
 else :
