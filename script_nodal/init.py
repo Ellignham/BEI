@@ -407,7 +407,8 @@ class Init(Input):
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=self.tfluid_init
-    
+                
+
     def initemp_cart_x(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,2]<self.Lx/4:
