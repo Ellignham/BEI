@@ -426,16 +426,50 @@ class Init(Input):
 
 			
     def resistance_dom(self):
+        print('Computing Thermal Resistance for the domain...')
 		dx=self.nodes[1,2] - self.nodes[0,2]
 		dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
 		self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
 		for idnode in range(self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta) :
+            
+            #POINT CENTRE DU BAS
             if idnode == self.Nptx - 1) :
-                pass#point du bas
+				self.R[idnode,0] = idnode
+                #~ voisin gauche
+                j=1
+                ng=int(self.neig[idnode,j])
+                self.R[idnode,j] = dx / (self.k * dy)
+                #~ voisins bas
+                for j in range(3,self.ntheta+3) :
+                    ng=int(self.neig[idnode,j])
+                    rng=np.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
+                    self.R[idnode,j] = r / (self.k * r*sin(self.angle))
+                j+=1
+                #~ voisin haut
+                ng=int(self.neig[idnode,j])
+                self.R[idnode,j] = dx / (self.k * dy)
+
+            #POINT CENTRE DU HAUT
             if idnode == self.Npty*self.Nptx - 1) :
-                pass#point du haut
+				self.R[idnode,0] = idnode
+                #~ voisin gauche
+                j=1
+                ng=int(self.neig[idnode,j])
+                self.R[idnode,j] = dx / (self.k * dy)
+                #~ voisin bas
+                j+=2
+                ng=int(self.neig[idnode,j])
+                self.R[idnode,j] = dx / (self.k * dy)
+                #~ voisins haut
+                for j in range(4,self.ntheta+3) :
+                    ng=int(self.neig[idnode,j])
+                    rng=np.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
+                    self.R[idnode,j] = r / (self.k * r*sin(self.angle))
+
+
+                
+			#~ PARTIE RECTANGLE
             elif (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly - self.Lx) :
-			#~ Partie Resctangle
 				j=1
 				self.R[idnode,0] = idnode
 				while ((int(self.neig[idnode,j]) != -1)):
@@ -450,7 +484,8 @@ class Init(Input):
 							res= dy / (self.k * dx)
 						self.R[idnode,j]= res
 					j+=1
-			#~ Partie Cylindrique
+                    
+			#~ PARTIE POLAIRE
 			else :
 				rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
 				j=1
