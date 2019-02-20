@@ -166,8 +166,9 @@ class Init(Input):
 
         self.neig[self.Nptsx*(self.Nptsy-1),1]=-2     
         self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-1)+1
-        self.neig[self.Nptsx*(self.Nptsy-1),3]=self.Nptsx*(self.Nptsy-2)
-        self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
+        self.neig[self.Nptsx*(self.Nptsy-1),3]=-1 #temporary -1
+        self.neig[self.Nptsx*(self.Nptsy-1),4]=self.Nptsx*(self.Nptsy-2)
+        self.neig[self.Nptsx*(self.Nptsy-1),5]=-1
         
         self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2
         self.neig[self.Nptsx*self.Nptsy-1,2]=-3
@@ -215,6 +216,7 @@ class Init(Input):
                     self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=id_node+self.Nptsx-1
                     self.neig[id_node,4]=self.Nptsx-1-r
+                    self.neig[id_node,5]=-1
                     self.neig[self.Nptsx-1-r,3]=id_node
                 #center of the circle
                 elif (r==1 and theta>1 and theta<self.ntheta):
@@ -254,7 +256,6 @@ class Init(Input):
                     self.neig[id_node,4]=id_node-self.Nptsx+1
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsx-1,2+theta]=id_node
-                    self.neig[self.Nptsx-1,3+theta]=-1
         
         # Create upper circle part
         for theta in range(1,self.ntheta+1):
@@ -294,8 +295,7 @@ class Init(Input):
                     self.neig[id_node,3]=self.Nptsy*self.Nptsx-1-r
                     self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsy*self.Nptsx-1-r,4]=id_node
-                    self.neig[self.Nptsy*self.Nptsx-1-r,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1-r,3]=id_node
                 #center of the circle
                 elif (r==1 and theta>1 and theta<self.ntheta):
                     self.neig[id_node,1]=id_node+1
@@ -312,7 +312,6 @@ class Init(Input):
                     self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsx*(self.Nptsy-1),3]=id_node
-                    self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
                 elif (r==self.Nptsx-1 and theta==self.ntheta):
                     self.neig[id_node,1]=-2
                     self.neig[id_node,2]=id_node-1
@@ -549,4 +548,4 @@ test.domain_tank()
 test.init_domain()
 test.capacite_tank()
 test.resistance_tank()
-print(self.R)
+print(test.R)
