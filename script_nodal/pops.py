@@ -60,13 +60,15 @@ class Reservoir(Init) :
 			j=1
 			dT_dt[idnode]=0
 			C=1./self.C[idnode]
+			#~ print(int(self.neig[idnode,j]))
 			while ((int(self.neig[idnode,j]) != -1)):
+				#~ print('toto')
 				if self.R[idnode,j] !=0. :
 					G=1./self.R[idnode,j]
 					ng=int(self.neig[idnode,j])
 					deltaT=T[ng] - T[idnode]
 					dT_dt[idnode]+= G*deltaT				
-					j+=1
+				j+=1
 			dT_dt[idnode]=dT_dt[idnode] * C
 
 

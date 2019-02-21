@@ -333,6 +333,9 @@ class Init(Input):
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
+                    
+
+
 
 
     def init_domain_cart(self):

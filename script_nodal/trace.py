@@ -20,7 +20,7 @@ Reservoir1=Reservoir()
 Reservoir1.domain_tank()
 Reservoir1.init_domain()
 Reservoir1.initemp_cart_x()
-Reservoir1.resistance_dom()
+Reservoir1.resistance_tank()
 typ='tot'
 
 exec(open("./visu.py").read())
@@ -34,7 +34,7 @@ if os.path.isfile('./ResultArray.dat') :
 		#~Version totale 
 		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
 		#~ Reservoir1.temp2d=Reservoir1.temp
-		plot_champs_res(x, y, Reservoir1.temp, 3.)
+		plot_champs_res(x, y, Reservoir1.temp, temps[-1])
 	
 
 else :
