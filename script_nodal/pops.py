@@ -31,7 +31,7 @@ class Reservoir(Init) :
 		self.domain[:,0]=self.nodes[:,2]
 		self.domain[:,1]=self.nodes[:,1]
 		self.resistance_cart()
-		# ~ self.initemp_cart()
+	#	self.initemp_cart_y()
 		self.initemp_cart_x()
 		self.initemp_cart_y()
 		self.capacite_cart()
