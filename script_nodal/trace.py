@@ -29,11 +29,10 @@ elif (Reservoir1.mesh_type=='tank'):
     Reservoir1.resistance_tank()
 
 
-typ='tot'
 
 exec(open("./visu.py").read())
 if os.path.isfile('./ResultArray.dat') : 
-	if typ=='cart' :
+	if Reservoir1.mesh_type=='cart' :
 		#~ Version cartesienne
 		temps, temp = lecture_champs('ResultArray.dat')
 		Reservoir1.temp2d = temp[-1].reshape((Reservoir1.Nptsy, Reservoir1.Nptsx))
