@@ -334,20 +334,6 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
 
-  #      print(self.nodes)
-        print(self.neig)
- 
-        fig=plt.figure()
-        ax = fig.add_subplot(111)
-        plt.plot(self.nodes[:,2],self.nodes[:,1],'or')
-        for i, txt in enumerate(self.nodes[:,0]):
-            ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
-        plt.xlim(0,0.5)
-        plt.ylim(9.5,10)
-      #  plt.ylim(8,10.5)
-      #  plt.xlim(0.5,1.4)
-        plt.show()
-
     def init_domain(self):
         """
         Initialise the domain before the computation
