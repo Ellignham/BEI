@@ -20,26 +20,35 @@ from init import Init
 
 class Reservoir(Init) :
 
-	def __init__(self):
-		Init.__init__(self)
-		self.meshx, self.meshy = np.meshgrid(self.x, self.y)
-		self.domain=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+    def __init__(self):
+        Init.__init__(self)
+        self.meshx, self.meshy = np.meshgrid(self.x, self.y)
+        self.domain=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
 		
 		
 	
-	def systeme_init(self, temp) :
-		#~ self.domain_cart()
-		self.domain_tank()
-		self.init_domain()
-		#~ self.domain[:,0]=self.nodes[:,2]
-		#~ self.domain[:,1]=self.nodes[:,1]
-		#~ self.resistance_cart()
-		self.resistance_tank()
-	#	self.initemp_cart_y()
-		self.initemp_cart_x()
-		self.initemp_cart_y()
-		self.capacite_tank()
-		temp[:]=np.copy(self.temp)
+    def systeme_init(self, temp) :
+        if (self.mesh_type=='cart'):
+            self.domain_cart()
+            self.init_domain_cart()
+            #~ self.domain[:,0]=self.nodes[:,2]
+            #~ self.domain[:,1]=self.nodes[:,1]
+            self.resistance_cart()
+            self.initemp_cart_x()
+            #self.initemp_cart_y()
+            self.capacite_cart()
+            temp[:]=np.copy(self.temp)
+        elif (self.mesh_type=='tank'):
+            self.domain_tank()
+            self.init_domain_tank()
+            #~ self.domain[:,0]=self.nodes[:,2]
+            #~ self.domain[:,1]=self.nodes[:,1]
+            self.resistance_tank()
+            self.initemp_cart_x()
+            #self.initemp_cart_y()
+            self.capacite_tank()
+            temp[:]=np.copy(self.temp)
+
 
 
 		

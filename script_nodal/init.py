@@ -335,7 +335,49 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
 
 
-    def init_domain(self):
+    def init_domain_cart(self):
+        """
+        Initialise the domain before the computation
+
+
+        Variables :
+
+        temp        : array containing the temperature field [K]
+        pres        : array containing the pressure field [Pa]
+
+        U           : array containing the x velocity field [m/s]
+        V           : array containing the y velocity field [m/s]
+
+        R           : array containing the conduction thermal resistance [K.m/W]
+        C           : array containing the conduction thermal capacity
+
+        phi         : array describing whether the fluid is liquid or gas 
+        """
+        
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy))
+        
+        #Creation of the pressure array
+        self.pres = np.zeros((self.Nptsx*self.Nptsy)) 
+        self.pres[:] = self.pfluid_init 
+        
+        #Creation of the velocity fields
+        self.U = np.zeros((self.Nptsx*self.Nptsy))
+        self.V = np.zeros((self.Nptsx*self.Nptsy))
+        self.U[:]=self.ufluid_init
+        self.V[:]=self.vfluid_init
+
+        #Creation of thermal resistance arrays
+        self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
+        #~ np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+        
+        #Creation of thermal capacity array
+        self.C = np.zeros((self.Nptsy*self.Nptsx))
+   
+        #Creation of the phase array
+        self.phi = np.zeros((self.Nptsx*self.Nptsy))
+ 
+    def init_domain_tank(self):
         """
         Initialise the domain before the computation
 
@@ -376,7 +418,7 @@ class Init(Input):
    
         #Creation of the phase array
         self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
- 
+
     def initemp_cart_y(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,1]<self.Ly/2 :
