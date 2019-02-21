@@ -234,7 +234,6 @@ class Init(Input):
                     self.neig[id_node,4]=0
                     self.neig[id_node,5]=-1
                     self.neig[0,3]=id_node
-                    self.neig[0,4]=-1
                 elif (r==self.Nptsx-1 and theta==self.ntheta):
                     self.neig[id_node,1]=-2
                     self.neig[id_node,2]=id_node-1
