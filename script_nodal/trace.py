@@ -23,7 +23,7 @@ if (Reservoir1.mesh_type=='cart'):
     Reservoir1.domain_cart()
     Reservoir1.init_domain_cart()
     Reservoir1.initemp_cart_x()
-    Reservoir1.resistance_tank()
+    Reservoir1.resistance_cart()
 elif (Reservoir1.mesh_type=='tank'):
     Reservoir1.domain_tank()
     Reservoir1.init_domain_tank()
