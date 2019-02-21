@@ -27,11 +27,12 @@ class Reservoir(Init) :
 		
 		
 	
-	def systeme_init_cart(self, temp) :
-		self.domain_cart()
+	def systeme_init(self, temp) :
+		#~ self.domain_cart()
+		self.domain_tank()
 		self.init_domain()
-		self.domain[:,0]=self.nodes[:,2]
-		self.domain[:,1]=self.nodes[:,1]
+		#~ self.domain[:,0]=self.nodes[:,2]
+		#~ self.domain[:,1]=self.nodes[:,1]
 		#~ self.resistance_cart()
 		self.resistance_tank()
 	#	self.initemp_cart_y()
@@ -39,8 +40,7 @@ class Reservoir(Init) :
 		self.initemp_cart_y()
 		self.capacite_tank()
 		temp[:]=np.copy(self.temp)
-		#~ print()
-		#~ Rajout condition initiale
+
 
 		
 

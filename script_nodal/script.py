@@ -23,7 +23,7 @@ Reservoir1=Reservoir()
 
 		#~ INTEGRATION TEMPORELLE ET ECRITURE
 		
-ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy
+ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy+2*(Reservoir1.Nptsx-1)*Reservoir1.ntheta
 listVar=[i for i in range(ProblemSize)]
 # ~ listVar=[0,1]
 AdapTimeStepBool=False
@@ -36,7 +36,7 @@ SavedIteration=100
 Error=1e-8
 
 
-Problem=PbDef.NumericalProblem(Reservoir1.systeme_init_cart,Reservoir1.systeme_cond,METHODE,\
+Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_cond,METHODE,\
 MAXNTIMESTEP,ProblemSize,TimeStep=TIMESTEP,\
 Duration=Duration,AdaptativeTimeStep=AdapTimeStepBool,\
 NbIterationSaved=SavedIteration,\
