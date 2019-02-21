@@ -76,7 +76,7 @@ def plot_champs_res(x, y, champs, time):
 	xi = np.linspace(-2.1, 2.1, 100)
 	yi = np.linspace(0., 10.1, 200)
 	# grid the data.
-	zi = griddata(x, y, champs, xi, yi, interp='linear')
+	zi = griddata(x,y, champs, xi,yi, interp='linear')
 	# contour the gridded data, plotting dots at the nonuniform data points.
 	#~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
 	CS = plt.contourf(xi, yi, zi, 15,
