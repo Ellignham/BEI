@@ -16,11 +16,7 @@ from init import Init
 from pops import Reservoir
 
 
-Reservoir1=Reservoir()
-Reservoir1.domain_tank()
-Reservoir1.init_domain()
-Reservoir1.initemp_cart_x()
-Reservoir1.resistance_tank()
+
 typ='tot'
 
 exec(open("./visu.py").read())
@@ -31,6 +27,12 @@ if os.path.isfile('./ResultArray.dat') :
 		Reservoir1.temp2d = temp[-1].reshape((Reservoir1.Nptsy, Reservoir1.Nptsx))
 		plot_champs_cart(Reservoir1, Reservoir1.temp2d, temps[-1])
 	else :
+		
+		Reservoir1=Reservoir()
+		Reservoir1.domain_tank()
+		Reservoir1.init_domain_tank()
+		Reservoir1.initemp_tank_x()
+		#~ Reservoir1.resistance_tank()
 		#~Version totale 
 		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
 		#~ Reservoir1.temp2d=Reservoir1.temp

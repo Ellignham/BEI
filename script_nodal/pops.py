@@ -54,7 +54,8 @@ class Reservoir(Init) :
 		for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
-			C=1./self.C[idnode]
+			#~ C=1./self.C[idnode]
+			C=1.
 			#~ print(int(self.neig[idnode,j]))
 			while ((int(self.neig[idnode,j]) != -1)):
 				#~ print('toto')
