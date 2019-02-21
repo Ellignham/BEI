@@ -34,8 +34,8 @@ class Reservoir(Init) :
             #~ self.domain[:,0]=self.nodes[:,2]
             #~ self.domain[:,1]=self.nodes[:,1]
             self.resistance_cart()
-            self.initemp_cart_x()
-            #self.initemp_cart_y()
+            #self.initemp_cart_x()
+            self.initemp_cart_y()
             self.capacite_cart()
             temp[:]=np.copy(self.temp)
         elif (self.mesh_type=='tank'):
@@ -45,7 +45,7 @@ class Reservoir(Init) :
             #~ self.domain[:,1]=self.nodes[:,1]
             self.resistance_tank()
             self.initemp_tank_x()
-            #self.initemp_tank_y()
+            #~ self.initemp_tank_y()
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
 

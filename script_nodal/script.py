@@ -30,8 +30,8 @@ elif (Reservoir1.mesh_type=='cart'):
 listVar=[i for i in range(ProblemSize)]
 # ~ listVar=[0,1]
 AdapTimeStepBool=False
-Duration=60.
-MAXNTIMESTEP=100001 
+Duration=30.
+MAXNTIMESTEP=1e12 
 TIMESTEP=0.002
 METHODE='Euler'
 ListOfVariablesToSave=listVar
