@@ -334,6 +334,7 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
 
+
     def init_domain(self):
         """
         Initialise the domain before the computation
@@ -530,10 +531,10 @@ class Init(Input):
 
 
 
-
-test=Init()
-test.domain_tank()
-test.init_domain()
-test.capacite_tank()
-test.resistance_tank()
-print(test.R)
+#~ 
+#~ test=Init()
+#~ test.domain_tank()
+#~ test.init_domain()
+#~ test.capacite_tank()
+#~ test.resistance_tank()
+#~ print(test.R)
