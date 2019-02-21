@@ -436,7 +436,7 @@ class Init(Input):
             else :
                 self.temp[k]=self.tfluid_init
 			
-     def initemp_tank_y(self):
+    def initemp_tank_y(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
