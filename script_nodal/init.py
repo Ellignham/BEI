@@ -470,40 +470,40 @@ class Init(Input):
                 
 			#~ PARTIE RECTANGLE
             elif (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly - self.Lx) :
-				j=1
-				self.R[idnode,0] = idnode
-				while ((int(self.neig[idnode,j]) != -1)):
-					ng=int(self.neig[idnode,j])
-					if (ng != -3 and ng !=-2) :
-						if j<3:
-							res = dx /(self.k * dy)
-						else :
-							dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
-							dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])
-							l=np.sqrt(dxx**2 + dyy**2)
-							res= dy / (self.k * dx)
-						self.R[idnode,j]= res
-					j+=1
+                j=1
+                self.R[idnode,0] = idnode
+                while ((int(self.neig[idnode,j]) != -1)):
+                    ng=int(self.neig[idnode,j])
+                    if (ng != -3 and ng !=-2) :
+                        if j<3:
+                            res = dx /(self.k * dy)
+                        else :
+                            dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+                            dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])
+                            l=np.sqrt(dxx**2 + dyy**2)
+                            res= dy / (self.k * dx)
+                        self.R[idnode,j]= res
+                    j+=1
                     
 			#~ PARTIE POLAIRE
             else :
-				rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
-				j=1
-				self.R[idnode,0] = idnode
-				while ((int(self.neig[idnode,j]) != -1)):
-					ng=int(self.neig[idnode,j])
-					if (ng != -3 and ng !=-2) :
-						if j<3:
-							rng=min(math.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 ), math.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )) 
-							r2=max(rnode,rng)
-							r1=min(rnode,rng)
-							res = np.log(r2/r1)/(2*np.pi*self.k)
-						else : 
-							dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
-							dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
-							l=np.sqrt(dxx**2 + dyy**2)
-							res= dy / (self.k * dx)
-					j+=1
+                rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
+                j=1
+                self.R[idnode,0] = idnode
+                while ((int(self.neig[idnode,j]) != -1)):
+                    ng=int(self.neig[idnode,j])
+                    if (ng != -3 and ng !=-2) :
+                        if j<3:
+                            rng=min(math.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 ), math.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )) 
+                            r2=max(rnode,rng)
+                            r1=min(rnode,rng)
+                            res = np.log(r2/r1)/(2*np.pi*self.k)
+                        else : 
+                            dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+                            dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
+                            l=np.sqrt(dxx**2 + dyy**2)
+                            res= dy / (self.k * dx)
+                    j+=1
 
 
 
