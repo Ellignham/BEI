@@ -423,6 +423,20 @@ class Init(Input):
         self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
 
     def initemp_cart_y(self):
+        for k in range(0,self.Nptsx*self.Nptsy):
+            if self.nodes[k,1]<self.Ly/2 :
+                self.temp[k]=self.T1
+            else :
+                self.temp[k]=self.tfluid_init
+              
+    def initemp_cart_x(self):
+        for k in range(0,self.Nptsx*self.Nptsy):
+            if self.nodes[k,2]<self.Lx/4:
+                self.temp[k]=self.T1
+            else :
+                self.temp[k]=self.tfluid_init
+			
+     def initemp_tank_y(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
@@ -430,13 +444,13 @@ class Init(Input):
                 self.temp[k]=self.tfluid_init
                 
 
-    def initemp_cart_x(self):
+    def initemp_tank_x(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,2]<self.Lx/4:
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=self.tfluid_init
-			
+	 
     def resistance_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
