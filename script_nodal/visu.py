@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import math as math
 from matplotlib.mlab import griddata
+import matplotlib.cm as cm
 import csv
 
 #Class
@@ -80,7 +81,7 @@ def plot_champs_res(x, y, champs, time):
 	# contour the gridded data, plotting dots at the nonuniform data points.
 	#~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
 	CS = plt.contourf(xi, yi, zi, 15,
-					  vmax=abs(zi).max(), vmin=-abs(zi).max())
+					  vmax=abs(zi).max(), vmin=-abs(zi).max(),cmap=cm.rainbow)
 	plt.colorbar()  # draw colorbar
 	# plot data points.
 	plt.scatter(x, y, marker='o', s=5, zorder=10)
