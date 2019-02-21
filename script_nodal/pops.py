@@ -49,12 +49,7 @@ class Reservoir(Init) :
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
 
-
-
-		
-
-		
-	def systeme_cond(self, T, dT_dt, time=0.0):
+    def systeme_cond(self, T, dT_dt, time=0.0):
 		taille=self.Nptsy*self.Nptsx
 		for idnode in range(taille) :
 			j=1
