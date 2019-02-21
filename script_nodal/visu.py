@@ -112,13 +112,14 @@ def ecriture_csv(ProblemSize,temps,Reservoire):
 	Reads the array for each time
 	return an array of the field, and temperature for each coordinate
 	"""
-	ArrayTemp=np.zeros((ProblemSize,3),dtype=float)
-	liste=["x","y","Temperature"]
+	ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
+	liste=["x","y","z","Temperature"]
 	for j in range(0,len(temps)):
-		f=open("ArrayTemp_{}.csv".format(j),"wb")
+		f=open("ArrayTemp.csv.{}".format(j),"wb")
 		ArrayTemp[:,0]=Reservoire.domain[:,0]
 		ArrayTemp[:,1]=Reservoire.domain[:,1]
-		ArrayTemp[:,2]=temp[j]
+		ArrayTemp[:,2]=0
+		ArrayTemp[:,3]=temp[j]
 		writer=csv.writer(f,delimiter=',')
 		writer.writerow(liste)
 		writer.writerows(ArrayTemp)
