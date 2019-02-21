@@ -22,8 +22,11 @@ from pops import Reservoir
 Reservoir1=Reservoir()
 
 		#~ INTEGRATION TEMPORELLE ET ECRITURE
-		
-ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy+2*(Reservoir1.Nptsx-1)*Reservoir1.ntheta
+if (Reservoir1.mesh_type=='tank'):		
+    ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy+2*(Reservoir1.Nptsx-1)*Reservoir1.ntheta
+elif (Reservoir1.mesh_type=='cart'):
+    ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy
+
 listVar=[i for i in range(ProblemSize)]
 # ~ listVar=[0,1]
 AdapTimeStepBool=False
