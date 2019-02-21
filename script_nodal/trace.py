@@ -15,12 +15,20 @@ from input import Input
 from init import Init
 from pops import Reservoir
 
-
 Reservoir1=Reservoir()
-Reservoir1.domain_tank()
-Reservoir1.init_domain()
-Reservoir1.initemp_cart_x()
-Reservoir1.resistance_tank()
+
+if (Reservoir1.mesh_type=='cart'):
+    Reservoir1.domain_cart()
+    Reservoir1.init_domain_cart()
+    Reservoir1.initemp_cart_x()
+    Reservoir1.resistance_tank()
+elif (Reservoir1.mesh_type=='tank'):
+    Reservoir1.domain_tank()
+    Reservoir1.init_domain_tank()
+    Reservoir1.initemp_tank_x()
+    Reservoir1.resistance_tank()
+
+
 typ='tot'
 
 exec(open("./visu.py").read())
