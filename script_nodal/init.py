@@ -448,8 +448,9 @@ class Init(Input):
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (self.k * dy)
 
+
             #POINT CENTRE DU HAUT
-            if (idnode == self.Nptsy*self.Nptsx - 1) :
+            elif (idnode == self.Nptsy*self.Nptsx - 1) :
                 self.R[idnode,0] = idnode
                 #~ voisin gauche
                 j=1
@@ -460,7 +461,7 @@ class Init(Input):
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (self.k * dy)
                 #~ voisins haut
-                for j in range(4,self.ntheta+3) :
+                for j in range(4,self.ntheta+4) :
                     ng=int(self.neig[idnode,j])
                     rng=np.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
                     self.R[idnode,j] = rng / (self.k * rng*np.sin(self.angle))
@@ -468,7 +469,7 @@ class Init(Input):
 
                 
 			#~ PARTIE RECTANGLE
-            elif (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly - self.Lx) :
+            elif (idnode>=0 and idnode<self.Nptsx*self.Nptsy) :
                 j=1
                 self.R[idnode,0] = idnode
                 while ((int(self.neig[idnode,j]) != -1)):
@@ -494,14 +495,16 @@ class Init(Input):
                     if (ng != -3 and ng !=-2) :
                         if j<3:
                             rng=min(math.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 ), math.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )) 
+                             
                             r2=max(rnode,rng)
                             r1=min(rnode,rng)
                             res = np.log(r2/r1)/(2*np.pi*self.k)
-                        else : 
+                        else :
                             dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
                             dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
                             l=np.sqrt(dxx**2 + dyy**2)
                             res= dy / (self.k * dx)
+                        self.R[idnode,j]= res
                     j+=1
 
 
