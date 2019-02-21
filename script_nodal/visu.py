@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2.7
 
 #Imports
 import numpy as np 
@@ -62,6 +62,11 @@ def plot_champs_cart(dom, champs, time):
 	plt.ylabel('y')
 	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
 	plt.show()
+	#~ 
+	#~ 
+#~ def plot_coupe_lx2(x, y, champs, dom, time) :
+	#~ plt.figure('Profil de temperature en coupe')
+	#~ milieu = (
 
 
 def plot_champs_res(x, y, champs, time):
@@ -70,18 +75,22 @@ def plot_champs_res(x, y, champs, time):
 	"""
 
 	
-	plt.figure()	
+	fig1=plt.figure()	
 
 	# define grid.
-	xi = np.linspace(-2.1, 2.1, 100)
-	yi = np.linspace(0., 10.1, 200)
+	xi = np.linspace(-2.5, 2.5, 100)
+	yi = np.linspace(-.1, 10.1, 200)
 	# grid the data.
-	zi = griddata(x, y, champs, xi, yi, interp='linear')
+	zi = griddata(x,y, champs, xi,yi, interp='linear')
 	# contour the gridded data, plotting dots at the nonuniform data points.
 	#~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
-	CS = plt.contourf(xi, yi, zi, 15,
-					  vmax=abs(zi).max(), vmin=-abs(zi).max())
-	plt.colorbar()  # draw colorbar
+	#~ CS = plt.contourf(xi, yi, zi, 100,
+					  #~ vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=plt.cm.bone, origin='upper')
+	CS = plt.contourf(xi, yi, zi, 100,
+					   cmap=plt.cm.rainbow)
+	cbar = fig1.colorbar(CS)
+	cbar.ax.set_ylabel('champs')
+	#~ plt.colorbar()  # draw colorbar
 	# plot data points.
 	plt.scatter(x, y, marker='o', s=5, zorder=10)
 	#~ plt.xlim(-2, 2)
@@ -126,6 +135,6 @@ def ecriture_csv(ProblemSize,temps,Reservoire):
 
 
 
-
+#~ vmax=abs(zi).max(), vmin=-abs(zi).max(),
 
 

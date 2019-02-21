@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/python2.7
+
 
 #Imports
 import numpy as np 
@@ -29,8 +30,8 @@ elif (Reservoir1.mesh_type=='cart'):
 listVar=[i for i in range(ProblemSize)]
 # ~ listVar=[0,1]
 AdapTimeStepBool=False
-Duration=6.
-MAXNTIMESTEP=100001 
+Duration=30.
+MAXNTIMESTEP=100001
 TIMESTEP=0.002
 METHODE='Euler'
 ListOfVariablesToSave=listVar

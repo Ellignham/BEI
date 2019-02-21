@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2.7
 
 #Imports
 import numpy as np 
@@ -166,8 +166,9 @@ class Init(Input):
 
         self.neig[self.Nptsx*(self.Nptsy-1),1]=-2     
         self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-1)+1
-        self.neig[self.Nptsx*(self.Nptsy-1),3]=self.Nptsx*(self.Nptsy-2)
-        self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
+        self.neig[self.Nptsx*(self.Nptsy-1),3]=-1 #temporary -1
+        self.neig[self.Nptsx*(self.Nptsy-1),4]=self.Nptsx*(self.Nptsy-2)
+        self.neig[self.Nptsx*(self.Nptsy-1),5]=-1
         
         self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2
         self.neig[self.Nptsx*self.Nptsy-1,2]=-3
@@ -215,6 +216,7 @@ class Init(Input):
                     self.neig[id_node,2]=id_node-1
                     self.neig[id_node,3]=id_node+self.Nptsx-1
                     self.neig[id_node,4]=self.Nptsx-1-r
+                    self.neig[id_node,5]=-1
                     self.neig[self.Nptsx-1-r,3]=id_node
                 #center of the circle
                 elif (r==1 and theta>1 and theta<self.ntheta):
@@ -232,7 +234,6 @@ class Init(Input):
                     self.neig[id_node,4]=0
                     self.neig[id_node,5]=-1
                     self.neig[0,3]=id_node
-                    self.neig[0,4]=-1
                 elif (r==self.Nptsx-1 and theta==self.ntheta):
                     self.neig[id_node,1]=-2
                     self.neig[id_node,2]=id_node-1
@@ -254,7 +255,6 @@ class Init(Input):
                     self.neig[id_node,4]=id_node-self.Nptsx+1
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsx-1,2+theta]=id_node
-                    self.neig[self.Nptsx-1,3+theta]=-1
         
         # Create upper circle part
         for theta in range(1,self.ntheta+1):
@@ -294,8 +294,7 @@ class Init(Input):
                     self.neig[id_node,3]=self.Nptsy*self.Nptsx-1-r
                     self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
-                    self.neig[self.Nptsy*self.Nptsx-1-r,4]=id_node
-                    self.neig[self.Nptsy*self.Nptsx-1-r,5]=-1
+                    self.neig[self.Nptsy*self.Nptsx-1-r,3]=id_node
                 #center of the circle
                 elif (r==1 and theta>1 and theta<self.ntheta):
                     self.neig[id_node,1]=id_node+1
@@ -312,7 +311,6 @@ class Init(Input):
                     self.neig[id_node,4]=id_node+self.Nptsx-1
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsx*(self.Nptsy-1),3]=id_node
-                    self.neig[self.Nptsx*(self.Nptsy-1),4]=-1
                 elif (r==self.Nptsx-1 and theta==self.ntheta):
                     self.neig[id_node,1]=-2
                     self.neig[id_node,2]=id_node-1
@@ -335,22 +333,54 @@ class Init(Input):
                     self.neig[id_node,5]=-1
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
+                    
 
-  #      print(self.nodes)
-        print(self.neig)
+
+
+
+    def init_domain_cart(self):
+        """
+        Initialise the domain before the computation
+
+
+        Variables :
+
+        temp        : array containing the temperature field [K]
+        pres        : array containing the pressure field [Pa]
+
+        U           : array containing the x velocity field [m/s]
+        V           : array containing the y velocity field [m/s]
+
+        R           : array containing the conduction thermal resistance [K.m/W]
+        C           : array containing the conduction thermal capacity
+
+        phi         : array describing whether the fluid is liquid or gas 
+        """
+        
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy))
+        
+        #Creation of the pressure array
+        self.pres = np.zeros((self.Nptsx*self.Nptsy)) 
+        self.pres[:] = self.pfluid_init 
+        
+        #Creation of the velocity fields
+        self.U = np.zeros((self.Nptsx*self.Nptsy))
+        self.V = np.zeros((self.Nptsx*self.Nptsy))
+        self.U[:]=self.ufluid_init
+        self.V[:]=self.vfluid_init
+
+        #Creation of thermal resistance arrays
+        self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
+        #~ np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+        
+        #Creation of thermal capacity array
+        self.C = np.zeros((self.Nptsy*self.Nptsx))
+   
+        #Creation of the phase array
+        self.phi = np.zeros((self.Nptsx*self.Nptsy))
  
-        fig=plt.figure()
-        ax = fig.add_subplot(111)
-        plt.plot(self.nodes[:,2],self.nodes[:,1],'or')
-        for i, txt in enumerate(self.nodes[:,0]):
-            ax.annotate(txt, (self.nodes[i,2], self.nodes[i,1]))
-        plt.xlim(0,0.5)
-        plt.ylim(0,0.5)
-      #  plt.ylim(8,10.5)
-      #  plt.xlim(0.5,1.4)
-        plt.show()
-
-    def init_domain(self):
+    def init_domain_tank(self):
         """
         Initialise the domain before the computation
 
@@ -391,8 +421,22 @@ class Init(Input):
    
         #Creation of the phase array
         self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
- 
+
     def initemp_cart_y(self):
+        for k in range(0,self.Nptsx*self.Nptsy):
+            if self.nodes[k,1]<self.Ly/2 :
+                self.temp[k]=self.T1
+            else :
+                self.temp[k]=self.tfluid_init
+              
+    def initemp_cart_x(self):
+        for k in range(0,self.Nptsx*self.Nptsy):
+            if self.nodes[k,2]<self.Lx/4:
+                self.temp[k]=self.T1
+            else :
+                self.temp[k]=self.tfluid_init
+			
+    def initemp_tank_y(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
@@ -400,13 +444,13 @@ class Init(Input):
                 self.temp[k]=self.tfluid_init
                 
 
-    def initemp_cart_x(self):
+    def initemp_tank_x(self):
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,2]<self.Lx/4:
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=self.tfluid_init
-			
+	 
     def resistance_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
@@ -449,8 +493,9 @@ class Init(Input):
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (self.k * dy)
 
+
             #POINT CENTRE DU HAUT
-            if (idnode == self.Nptsy*self.Nptsx - 1) :
+            elif (idnode == self.Nptsy*self.Nptsx - 1) :
                 self.R[idnode,0] = idnode
                 #~ voisin gauche
                 j=1
@@ -461,7 +506,7 @@ class Init(Input):
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (self.k * dy)
                 #~ voisins haut
-                for j in range(4,self.ntheta+3) :
+                for j in range(4,self.ntheta+4) :
                     ng=int(self.neig[idnode,j])
                     rng=np.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
                     self.R[idnode,j] = rng / (self.k * rng*np.sin(self.angle))
@@ -469,41 +514,43 @@ class Init(Input):
 
                 
 			#~ PARTIE RECTANGLE
-            elif (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly - self.Lx) :
-				j=1
-				self.R[idnode,0] = idnode
-				while ((int(self.neig[idnode,j]) != -1)):
-					ng=int(self.neig[idnode,j])
-					if (ng != -3 and ng !=-2) :
-						if j<3:
-							res = dx /(self.k * dy)
-						else :
-							dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
-							dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])
-							l=np.sqrt(dxx**2 + dyy**2)
-							res= dy / (self.k * dx)
-						self.R[idnode,j]= res
-					j+=1
+            elif (idnode>=0 and idnode<self.Nptsx*self.Nptsy) :
+                j=1
+                self.R[idnode,0] = idnode
+                while ((int(self.neig[idnode,j]) != -1)):
+                    ng=int(self.neig[idnode,j])
+                    if (ng != -3 and ng !=-2) :
+                        if j<3:
+                            res = dx /(self.k * dy)
+                        else :
+                            dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+                            dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])
+                            l=np.sqrt(dxx**2 + dyy**2)
+                            res= dy / (self.k * dx)
+                        self.R[idnode,j]= res
+                    j+=1
                     
 			#~ PARTIE POLAIRE
             else :
-				rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
-				j=1
-				self.R[idnode,0] = idnode
-				while ((int(self.neig[idnode,j]) != -1)):
-					ng=int(self.neig[idnode,j])
-					if (ng != -3 and ng !=-2) :
-						if j<3:
-							rng=min(math.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 ), math.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )) 
-							r2=max(rnode,rng)
-							r1=min(rnode,rng)
-							res = np.log(r2/r1)/(2*np.pi*self.k)
-						else : 
-							dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
-							dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
-							l=np.sqrt(dxx**2 + dyy**2)
-							res= dy / (self.k * dx)
-					j+=1
+                rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
+                j=1
+                self.R[idnode,0] = idnode
+                while ((int(self.neig[idnode,j]) != -1)):
+                    ng=int(self.neig[idnode,j])
+                    if (ng != -3 and ng !=-2) :
+                        if j<3:
+                            rng=min(math.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 ), math.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )) 
+                             
+                            r2=max(rnode,rng)
+                            r1=min(rnode,rng)
+                            res = np.log(r2/r1)/(2*np.pi*self.k)
+                        else :
+                            dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
+                            dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
+                            l=np.sqrt(dxx**2 + dyy**2)
+                            res= dy / (self.k * dx)
+                        self.R[idnode,j]= res
+                    j+=1
 
 
 
