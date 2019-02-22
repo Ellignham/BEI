@@ -116,7 +116,7 @@ def plot_pres(self):
 	plt.ylabel('y')
 	plt.title('Pressure')
 
-def ecriture_csv(ProblemSize,temps,Reservoire):
+def ecriture_csv(ProblemSize,temps,Reservoir):
 	"""
 	Reads the array for each time
 	return an array of the field, and temperature for each coordinate
@@ -125,8 +125,8 @@ def ecriture_csv(ProblemSize,temps,Reservoire):
 	liste=["x","y","Temperature"]
 	for j in range(0,len(temps)):
 		f=open("ArrayTemp_{}.csv".format(j),"wb")
-		ArrayTemp[:,0]=Reservoire.domain[:,0]
-		ArrayTemp[:,1]=Reservoire.domain[:,1]
+		ArrayTemp[:,0]=Reservoir.domain[:,0]
+		ArrayTemp[:,1]=Reservoir.domain[:,1]
 		ArrayTemp[:,2]=temp[j]
 		writer=csv.writer(f,delimiter=',')
 		writer.writerow(liste)
