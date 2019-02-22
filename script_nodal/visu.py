@@ -127,6 +127,8 @@ def ecriture_csv(ProblemSize,temps,Reservoir):
 	Reads and write the array in csv format for Paraview
 	"""
 
+
+
 	ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
 	liste=["x","y","z","Temperature"]
 	
