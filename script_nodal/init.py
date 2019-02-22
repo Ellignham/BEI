@@ -31,8 +31,8 @@ class Init(Input):
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
         if (self.mesh_type=='cart'):
-            self.nodes = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,3))
-            self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,6+self.ntheta))
+            self.nodes = np.zeros((self.Nptsx*self.Nptsy,3))
+            self.neig = np.zeros((self.Nptsx*self.Nptsy,6))
         else:
             self.nodes = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,3))
             self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,5+self.ntheta))
@@ -79,11 +79,21 @@ class Init(Input):
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=-1
 
-        self.neig[0,1]=1; self.neig[0,2]=self.Nptsx;self.neig[0,3]=-1                            
-        self.neig[self.Nptsx-1,1]=self.Nptsx-2; self.neig[self.Nptsx-1,2]=2*self.Nptsx-1;self.neig[self.Nptsx-1,3]=-1
+        self.neig[0,1]=1
+        self.neig[0,2]=self.Nptsx
+        self.neig[0,3]=-1                            
+        
+        self.neig[self.Nptsx-1,1]=self.Nptsx-2
+        self.neig[self.Nptsx-1,2]=2*self.Nptsx-1
+        self.neig[self.Nptsx-1,3]=-1
       
-        self.neig[self.Nptsx*(self.Nptsy-1),1]=self.Nptsx*(self.Nptsy-1)+1; self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-2);self.neig[self.Nptsx*(self.Nptsy-1),3]=-1
-        self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2; self.neig[self.Nptsx*self.Nptsy-1,2]=self.Nptsx*(self.Nptsy-1)-1;self.neig[self.Nptsx*self.Nptsy-1,3]=-1
+        self.neig[self.Nptsx*(self.Nptsy-1),1]=self.Nptsx*(self.Nptsy-1)+1
+        self.neig[self.Nptsx*(self.Nptsy-1),2]=self.Nptsx*(self.Nptsy-2)
+        self.neig[self.Nptsx*(self.Nptsy-1),3]=-1
+        
+        self.neig[self.Nptsx*self.Nptsy-1,1]=self.Nptsx*self.Nptsy-2
+        self.neig[self.Nptsx*self.Nptsy-1,2]=self.Nptsx*(self.Nptsy-1)-1
+        self.neig[self.Nptsx*self.Nptsy-1,3]=-1
     
         
     def domain_tank(self):
