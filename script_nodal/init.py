@@ -613,10 +613,10 @@ class Init(Input):
 
 
 
-#~ 
-#~ test=Init()
-#~ test.domain_tank()
-#~ test.init_domain()
-#~ test.capacite_tank()
-#~ test.resistance_tank()
-#~ print(test.R)
+
+#test=Init()
+#test.domain_cart()
+#test.init_domain()
+#test.capacite_tank()
+#test.resistance_tank()
+#print(self.R)

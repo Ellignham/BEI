@@ -121,17 +121,31 @@ def ecriture_csv(ProblemSize,temps,Reservoir):
 	Reads the array for each time
 	return an array of the field, and temperature for each coordinate
 	"""
-	ArrayTemp=np.zeros((ProblemSize,3),dtype=float)
-	liste=["x","y","Temperature"]
-	for j in range(0,len(temps)):
-		f=open("ArrayTemp_{}.csv".format(j),"wb")
-		ArrayTemp[:,0]=Reservoir.domain[:,0]
-		ArrayTemp[:,1]=Reservoir.domain[:,1]
-		ArrayTemp[:,2]=temp[j]
-		writer=csv.writer(f,delimiter=',')
-		writer.writerow(liste)
-		writer.writerows(ArrayTemp)
 
+
+
+	ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
+	liste=["x","y","z","Temperature"]
+	if(Reservoir.mesh_type=='cart'):
+		for j in range(0,len(temps)):
+			f=open("ArrayTemp_cart/ArrayTemp_cart.csv.{}".format(j),"wb")
+			ArrayTemp[:,0]=Reservoir.nodes[:,2]
+			ArrayTemp[:,1]=Reservoir.nodes[:,1]
+			ArrayTemp[:,2]=0
+			ArrayTemp[:,3]=temp[j]
+			writer=csv.writer(f,delimiter=',')
+			writer.writerow(liste)
+			writer.writerows(ArrayTemp)
+	else:
+		for j in range(0,len(temps)):
+			f=open("ArrayTemp_tank/ArrayTemp_tank.csv.{}".format(j),"wb")
+			ArrayTemp[:,0]=Reservoir.nodes[:,2]
+			ArrayTemp[:,1]=Reservoir.nodes[:,1]
+			ArrayTemp[:,2]=0
+			ArrayTemp[:,3]=temp[j]
+			writer=csv.writer(f,delimiter=',')
+			writer.writerow(liste)
+			writer.writerows(ArrayTemp)
 
 
 #~ vmax=abs(zi).max(), vmin=-abs(zi).max(),
