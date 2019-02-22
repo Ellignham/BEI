@@ -27,7 +27,7 @@ if (Reservoir1.mesh_type=='cart'):
 elif (Reservoir1.mesh_type=='tank'):
     Reservoir1.domain_tank()
     Reservoir1.init_domain_tank()
-    Reservoir1.initemp_tank_x()
+    #~ Reservoir1.initemp_tank_x()
     Reservoir1.resistance_tank()
 
 
@@ -44,12 +44,12 @@ if os.path.isfile('./ResultArray.dat') :
 		Reservoir1=Reservoir()
 		Reservoir1.domain_tank()
 		Reservoir1.init_domain_tank()
-		Reservoir1.initemp_tank_x()
+		#~ Reservoir1.initemp_tank_x()
 		#~ Reservoir1.resistance_tank()
 		#~Version totale 
 		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
 		#~ Reservoir1.temp2d=Reservoir1.temp
-		plot_champs_res(x, y, Reservoir1.temp, temps[-1])
+		plot_champs_res(x, y, temperature[-1], temps[-1])
 	
 
 else :
