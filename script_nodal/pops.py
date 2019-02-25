@@ -127,10 +127,10 @@ class Reservoir(Init) :
         #Width of the interface 
         gradTliq=0
 
-pts=[]
-test=Reservoir()
-test.domain_tank()
-test.init_domain_tank()
-test.initemp_tank_y()
-dy=test.nodes[test.Nptsx,1]-test.nodes[0,1]
-test.interface(9216,dy,pts)
+#pts=[]
+#test=Reservoir()
+#test.domain_tank()
+#test.init_domain_tank()
+#test.initemp_tank_y()
+#dy=test.nodes[test.Nptsx,1]-test.nodes[0,1]
+#test.interface(9216,dy,pts)
