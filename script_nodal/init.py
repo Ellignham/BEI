@@ -380,7 +380,13 @@ class Init(Input):
         R           : array containing the conduction thermal resistance [K.m/W]
         C           : array containing the conduction thermal capacity
 
+        phi         : array describing whether the fluid is liquid or gas 1= liquid
         """
+        #Creation of the phase array
+        self.phi = np.zeros((self.Nptsx*self.Nptsy))
+        
+        #Initialisation of the phase array
+        self.phi[:] = 1
 
         #Creation of the temperature array
         self.temp = np.zeros((self.Nptsx*self.Nptsy))
@@ -419,8 +425,14 @@ class Init(Input):
         R           : array containing the conduction thermal resistance [K.m/W]
         C           : array containing the conduction thermal capacity
 
+        phi         : array describing whether the fluid is liquid or gas 
         """
-      
+        #Creation of the phase array
+        self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+
+        #Initialisation of the phase array
+        self.phi[:]=1
+       
         #Creation of the temperature array
         self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         
@@ -567,7 +579,7 @@ class Init(Input):
                             dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
                             dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
                             l=np.sqrt(dxx**2 + dyy**2)
-                            res= dy / (k_diph * dx)
+                            res= dxx / (self.k_liq * l)
                         self.R[idnode,j]= res
                     j+=1
 
