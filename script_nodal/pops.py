@@ -70,7 +70,10 @@ class Reservoir(Init) :
 			dT_dt[idnode]=dT_dt[idnode] * C
 
 
-    def interface(self,time):
+    def interface(self,time,dz,pts):
+        '''
+        Computes the position and width of the interface
+        '''
         interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
         #print(interface)
 
@@ -84,17 +87,25 @@ class Reservoir(Init) :
                 i+=1            
         
         if interface[i-1,0]==time:
-            self.height=interface[i-1,1]
+            self.height=interface[i-1,1]*self.Ly
         else :
             t1=interface[i-1,0]
             t2=interface[i,0]
 
-            self.height=(t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1]
-    
-        print(self.height)
+            self.height=(t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1]*self.Ly
    
-    def update_constant(self,T):
-        pass
+        #Points around the interface
+        pts=[]
+        for idnode in range(0,len(self.temp)):
+            if abs(self.nodes[idnode,1]-self.height)<=dz :
+                pts.append(idnode)
+        #Width of the interface 
+        gradTliq=0
 
+pts=[]
 test=Reservoir()
-test.interface(900)
+test.domain_tank()
+test.init_domain_tank()
+test.initemp_tank_y()
+dy=test.nodes[test.Nptsx,1]-test.nodes[0,1]
+test.interface(9216,dy,pts)
