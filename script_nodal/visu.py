@@ -22,14 +22,20 @@ import csv
 	
 	
 
-def lecture_champs(fname):
+def lecture_champs(fname,TIMESTEP,SavedIteration,Duration,TimeFrequency):
 	"""
 	Reads the temporal evolution of the field contained in ResultArray.dat
 	return temps, and temperature table
 	"""
 	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
-	temps=data[:,0]
-	temperature=data[:,1:]
+	temps=np.zeros((int(Duration/TimeFrequency)+1))
+	temperature=np.zeros((int(Duration/TimeFrequency)+1))
+	for i in range(0,int(Duration/TimeFrequency)):
+		temps[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),0]
+		temperature[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),1]
+
+	#temps=data[:,0]
+	#temperature=data[:,1:]
 	# ~ print temperature
 	return temps, temperature
 	
@@ -118,14 +124,14 @@ def plot_pres(self):
 
 def ecriture_csv(ProblemSize,temps,Reservoir):
 	"""
-	Reads the array for each time
-	return an array of the field, and temperature for each coordinate
+	Reads and write the array in csv format for Paraview
 	"""
 
 
 
 	ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
 	liste=["x","y","z","Temperature"]
+	
 	if(Reservoir.mesh_type=='cart'):
 		for j in range(0,len(temps)):
 			f=open("ArrayTemp_cart/ArrayTemp_cart.csv.{}".format(j),"wb")

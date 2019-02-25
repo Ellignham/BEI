@@ -49,15 +49,10 @@ Problem.SolveDifferentialProblem()
 
 
 		# ~ TRACE DES DONNEES
-		
-		
+				
 exec(open("./visu.py").read())
-
-
-temps, temp = lecture_champs('ResultArray.dat')
-
-
-
+TimeFrequency=1.0
+temps, temp = lecture_champs('ResultArray.dat',TIMESTEP,SavedIteration,Duration,TimeFrequency)
 ecriture_csv(ProblemSize,temps,Reservoir1)	
 
 
