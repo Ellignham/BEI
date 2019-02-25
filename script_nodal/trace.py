@@ -17,6 +17,8 @@ from input import Input
 from init import Init
 from pops import Reservoir
 
+plt.close('all')
+
 Reservoir1=Reservoir()
 
 if (Reservoir1.mesh_type=='cart'):
@@ -29,7 +31,7 @@ elif (Reservoir1.mesh_type=='tank'):
     Reservoir1.init_domain_tank()
     #~ Reservoir1.initemp_tank_x()
     Reservoir1.resistance_tank()
-
+	
 
 
 exec(open("./visu.py").read())
@@ -49,7 +51,8 @@ if os.path.isfile('./ResultArray.dat') :
 		#~Version totale 
 		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
 		#~ Reservoir1.temp2d=Reservoir1.temp
-		plot_champs_res(x, y, temperature[-1], temps[-1])
+		#~ plot_champs_res(x, y, temperature[-1], temps[-1])
+		save_png(x,y,temperature,temps)
 	
 
 else :

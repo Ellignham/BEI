@@ -46,13 +46,13 @@ class Reservoir(Init) :
             #~ self.domain[:,0]=self.nodes[:,2]
             #~ self.domain[:,1]=self.nodes[:,1]
             self.resistance_tank()
-            #~ self.initemp_tank_x()
-            self.initemp_tank_y()
+            self.initemp_tank_x()
+            #~ self.initemp_tank_y()
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
 
     def systeme_cond(self, T, dT_dt, time=0.0):
-		taille=self.Nptsy*self.Nptsx
+		taille=len(T)
 		for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
@@ -70,4 +70,31 @@ class Reservoir(Init) :
 			dT_dt[idnode]=dT_dt[idnode] * C
 
 
+    def interface(self,time):
+        interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
+        #print(interface)
 
+        loop=True
+        i=0
+
+        while loop :
+            if interface[i,0]>time:
+                loop=False
+            else :
+                i+=1            
+        
+        if interface[i-1,0]==time:
+            self.height=interface[i-1,1]
+        else :
+            t1=interface[i-1,0]
+            t2=interface[i,0]
+
+            self.height=(t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1]
+    
+        print(self.height)
+   
+    def update_constant(self,T):
+        pass
+
+test=Reservoir()
+test.interface(900)
