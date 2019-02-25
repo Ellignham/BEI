@@ -46,3 +46,20 @@ NbIterationSaved=SavedIteration,\
 ListOfIdVar=ListOfVariablesToSave,AdatativeTimeStep_Error=Error)
 
 Problem.SolveDifferentialProblem()
+
+
+		# ~ TRACE DES DONNEES
+				
+exec(open("./visu.py").read())
+TimeFrequency=1.0
+temps, temp = lecture_champs('ResultArray.dat',TIMESTEP,SavedIteration,Duration,TimeFrequency)
+ecriture_csv(ProblemSize,temps,Reservoir1)	
+
+
+#for i in range(len(temps)):
+
+
+#for i in range(len(temps)) :
+#	
+#	Reservoir1.temp2d = temp[i].reshape((50, 5))
+#	plot_champs(Reservoir1, Reservoir1.temp2d, temps[i])

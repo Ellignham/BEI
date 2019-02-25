@@ -27,14 +27,21 @@ import os
 	
 	
 
-def lecture_champs(fname):
+def lecture_champs(fname,TIMESTEP,SavedIteration,Duration,TimeFrequency):
 	"""
 	Reads the temporal evolution of the field contained in ResultArray.dat
 	return temps, and temperature table
 	"""
 	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
-	temps=data[:,0]
-	temperature=data[:,1:]
+	temps=np.zeros((int(Duration/TimeFrequency)+1))
+	temperature=np.zeros((int(Duration/TimeFrequency)+1))
+	for i in range(0,int(Duration/TimeFrequency)):
+		temps[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),0]
+		temperature[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),1]
+
+	#temps=data[:,0]
+	#temperature=data[:,1:]
+	# ~ print temperature
 	return temps, temperature
 	
 	
@@ -78,33 +85,32 @@ def plot_champs_res(x, y, champs, time):
     Plots a surface view of a reservoir-like geometry field. The field must be written in the non-structured form defined in Reservoir
     """
 
+	
+	fig1=plt.figure()	
 
-    fig1=plt.figure()	
-    norm = mplc.Normalize(cmin, cmax)
-    # define grid.
-    xi = np.linspace(-2.5, 2.5, 1000)
-    yi = np.linspace(-.1, 10.1, 4000)
-    # grid the data.
-    zi = griddata(x,y, champs, xi, yi, interp='linear')
-    # contour the gridded data, plotting dots at the nonuniform data points.
-    #~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
-    #~ CS = plt.contourf(xi, yi, zi, 100,
-                      #~ vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=plt.cm.bone, origin='upper')
-    CS = plt.contourf(xi, yi, zi, 100)#,
-                       #cmap=plt.cm.rainbow)
-    #~ plt.autumn()
-    cbar = fig1.colorbar(CS)
-    cbar.ax.set_ylabel('Temperature')
-    #~ plt.colorbar()  # draw colorbar
-    # plot data points.
-    plt.scatter(x, y, marker='o', s=5, zorder=10)
-    #~ plt.xlim(-2, 2)
-    #~ plt.ylim(-2, 2)
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title('Temperature au bout de %(g)s secondes'%{'g' : time})
-    plt.show()
+	# define grid.
+	xi = np.linspace(-2.5, 2.5, 100)
+	yi = np.linspace(-.1, 10.1, 200)
+	# grid the data.
+	zi = griddata(x,y, champs, xi,yi, interp='linear')
+	# contour the gridded data, plotting dots at the nonuniform data points.
+	#~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
+	#~ CS = plt.contourf(xi, yi, zi, 100,
+					  #~ vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=plt.cm.bone, origin='upper')
+	CS = plt.contourf(xi, yi, zi, 100,
+					   cmap=plt.cm.rainbow)
+	cbar = fig1.colorbar(CS)
+	cbar.ax.set_ylabel('champs')
+	#~ plt.colorbar()  # draw colorbar
+	# plot data points.
+	plt.scatter(x, y, marker='o', s=5, zorder=10)
+	#~ plt.xlim(-2, 2)
+	#~ plt.ylim(-2, 2)
 
+	plt.xlabel('x')
+	plt.ylabel('y')
+	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
+	plt.show()
 
 def save_champs_res(x, y, champs, time, cmax, cmin, j):
     """ 
@@ -162,22 +168,36 @@ def plot_pres(self):
 	plt.ylabel('y')
 	plt.title('Pressure')
 
-def ecriture_csv(ProblemSize,temps,Reservoire):
+def ecriture_csv(ProblemSize,temps,Reservoir):
 	"""
-	Reads the array for each time
-	return an array of the field, and temperature for each coordinate
+	Reads and write the array in csv format for Paraview
 	"""
-	ArrayTemp=np.zeros((ProblemSize,3),dtype=float)
-	liste=["x","y","Temperature"]
-	for j in range(0,len(temps)):
-		f=open("ArrayTemp_{}.csv".format(j),"wb")
-		ArrayTemp[:,0]=Reservoire.domain[:,0]
-		ArrayTemp[:,1]=Reservoire.domain[:,1]
-		ArrayTemp[:,2]=temp[j]
-		writer=csv.writer(f,delimiter=',')
-		writer.writerow(liste)
-		writer.writerows(ArrayTemp)
 
+
+
+	ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
+	liste=["x","y","z","Temperature"]
+	
+	if(Reservoir.mesh_type=='cart'):
+		for j in range(0,len(temps)):
+			f=open("ArrayTemp_cart/ArrayTemp_cart.csv.{}".format(j),"wb")
+			ArrayTemp[:,0]=Reservoir.nodes[:,2]
+			ArrayTemp[:,1]=Reservoir.nodes[:,1]
+			ArrayTemp[:,2]=0
+			ArrayTemp[:,3]=temp[j]
+			writer=csv.writer(f,delimiter=',')
+			writer.writerow(liste)
+			writer.writerows(ArrayTemp)
+	else:
+		for j in range(0,len(temps)):
+			f=open("ArrayTemp_tank/ArrayTemp_tank.csv.{}".format(j),"wb")
+			ArrayTemp[:,0]=Reservoir.nodes[:,2]
+			ArrayTemp[:,1]=Reservoir.nodes[:,1]
+			ArrayTemp[:,2]=0
+			ArrayTemp[:,3]=temp[j]
+			writer=csv.writer(f,delimiter=',')
+			writer.writerow(liste)
+			writer.writerows(ArrayTemp)
 
 
 #~ vmax=abs(zi).max(), vmin=-abs(zi).max(),
