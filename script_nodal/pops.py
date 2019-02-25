@@ -29,6 +29,7 @@ class Reservoir(Init) :
 	
     def systeme_init(self, temp) :
         if (self.mesh_type=='cart'):
+            self.init_phase_cart()
             self.domain_cart()
             self.init_domain_cart()
             #~ self.domain[:,0]=self.nodes[:,2]
@@ -39,6 +40,7 @@ class Reservoir(Init) :
             self.capacite_cart()
             temp[:]=np.copy(self.temp)
         elif (self.mesh_type=='tank'):
+            self.init_phase_tank()
             self.domain_tank()
             self.init_domain_tank()
             #~ self.domain[:,0]=self.nodes[:,2]

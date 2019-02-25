@@ -30,7 +30,7 @@ elif (Reservoir1.mesh_type=='cart'):
 listVar=[i for i in range(ProblemSize)]
 # ~ listVar=[0,1]
 AdapTimeStepBool=False
-Duration=6.
+Duration=20.
 MAXNTIMESTEP=100000000 
 TIMESTEP=0.002
 METHODE='Euler'
@@ -51,8 +51,10 @@ Problem.SolveDifferentialProblem()
 		# ~ TRACE DES DONNEES
 				
 exec(open("./visu.py").read())
+TypeFrequency=1 # =0 : frequence d'iteration , =1 : frequence de temps
 TimeFrequency=1.0
-temps, temp = lecture_champs('ResultArray.dat',TIMESTEP,SavedIteration,Duration,TimeFrequency)
+IterationFrequency=200
+temps, temp = lecture_champs('ResultArray.dat',TIMESTEP,SavedIteration,Duration,TimeFrequency,IterationFrequency,TypeFrequency)
 ecriture_csv(ProblemSize,temps,Reservoir1)	
 
 

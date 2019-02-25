@@ -22,18 +22,24 @@ import csv
 	
 	
 
-def lecture_champs(fname,TIMESTEP,SavedIteration,Duration,TimeFrequency):
+def lecture_champs(fname,TIMESTEP,SavedIteration,Duration,TimeFrequency,IterationFrequency,TypeFrequency):
 	"""
 	Reads the temporal evolution of the field contained in ResultArray.dat
 	return temps, and temperature table
 	"""
 	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
-	temps=np.zeros((int(Duration/TimeFrequency)+1))
-	temperature=np.zeros((int(Duration/TimeFrequency)+1))
-	for i in range(0,int(Duration/TimeFrequency)):
-		temps[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),0]
-		temperature[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),1]
-
+	if(TypeFrequency==1):
+		temps=np.zeros((int(Duration/TimeFrequency)+1))
+		temperature=np.zeros((int(Duration/TimeFrequency)+1))
+		for i in range(0,int(Duration/TimeFrequency)):
+			temps[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),0]
+			temperature[i]=data[i*int(TimeFrequency/(TIMESTEP*SavedIteration)),1]
+	else :
+		temps=np.zeros((int(Duration/(TIMESTEP*IterationFrequency))+1))
+		temperature=np.zeros((int(Duration/(TIMESTEP*IterationFrequency))+1))
+		for i in range(0,int(Duration/(TIMESTEP*IterationFrequency))):
+			temps[i]=data[i*IterationFrequency/SavedIteration,0]
+			temperature[i]=data[i*IterationFrequency/SavedIteration,1]
 	#temps=data[:,0]
 	#temperature=data[:,1:]
 	# ~ print temperature
