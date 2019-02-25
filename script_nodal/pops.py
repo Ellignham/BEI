@@ -54,8 +54,8 @@ class Reservoir(Init) :
 		for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
-			#~ C=1./self.C[idnode]
-			C=1.
+			C=1./self.C[idnode]
+			#~ C=1.
 			#~ print(int(self.neig[idnode,j]))
 			while ((int(self.neig[idnode,j]) != -1)):
 				#~ print('toto')
@@ -66,7 +66,32 @@ class Reservoir(Init) :
 					dT_dt[idnode]+= G*deltaT				
 				j+=1
 			dT_dt[idnode]=dT_dt[idnode] * C
-
+            
+    def systeme_diph(self, T, dT_dt, time=0.0):
+        phi_old = np.copy(self.phi)
+        #~ update tableau des phi : a rajouter
+        #~ calcul des flux
+        flux_pc = self.Hlv * (self.phi - phi_old)
+		taille=len(T)
+		for idnode in range(taille) :
+			j=1
+			dT_dt[idnode]=0
+			C=1./self.C[idnode]
+            
+			#~ C=1.
+			#~ print(int(self.neig[idnode,j]))
+			while ((int(self.neig[idnode,j]) != -1)):
+				#~ print('toto')
+				if self.R[idnode,j] !=0. :
+                    #~ flux provenant des autres noeuds par conduction 
+					G=1./self.R[idnode,j]
+					ng=int(self.neig[idnode,j])
+					deltaT=T[ng] - T[idnode]
+					dT_dt[idnode]+= G*deltaT				
+				j+=1
+            #~ bilan des flux
+			dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
+            
 
 
 
