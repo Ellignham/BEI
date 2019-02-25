@@ -44,13 +44,13 @@ class Reservoir(Init) :
             #~ self.domain[:,0]=self.nodes[:,2]
             #~ self.domain[:,1]=self.nodes[:,1]
             self.resistance_tank()
-            #~ self.initemp_tank_x()
-            self.initemp_tank_y()
+            self.initemp_tank_x()
+            #~ self.initemp_tank_y()
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
 
     def systeme_cond(self, T, dT_dt, time=0.0):
-		taille=self.Nptsy*self.Nptsx
+		taille=len(T)
 		for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
@@ -66,6 +66,7 @@ class Reservoir(Init) :
 					dT_dt[idnode]+= G*deltaT				
 				j+=1
 			dT_dt[idnode]=dT_dt[idnode] * C
+
 
 
 

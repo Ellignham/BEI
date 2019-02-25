@@ -563,7 +563,7 @@ class Init(Input):
                             dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
                             dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		
                             l=np.sqrt(dxx**2 + dyy**2)
-                            res= dy / (self.k_liq * dx)
+                            res= dxx / (self.k_liq * l)
                         self.R[idnode,j]= res
                     j+=1
 
