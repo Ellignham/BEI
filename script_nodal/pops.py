@@ -29,6 +29,7 @@ class Reservoir(Init) :
 	
     def systeme_init(self, temp) :
         if (self.mesh_type=='cart'):
+            self.init_phase_cart()
             self.domain_cart()
             self.init_domain_cart()
             #~ self.domain[:,0]=self.nodes[:,2]
@@ -39,6 +40,7 @@ class Reservoir(Init) :
             self.capacite_cart()
             temp[:]=np.copy(self.temp)
         elif (self.mesh_type=='tank'):
+            self.init_phase_tank()
             self.domain_tank()
             self.init_domain_tank()
             #~ self.domain[:,0]=self.nodes[:,2]
@@ -68,4 +70,31 @@ class Reservoir(Init) :
 			dT_dt[idnode]=dT_dt[idnode] * C
 
 
+    def interface(self,time):
+        interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
+        #print(interface)
 
+        loop=True
+        i=0
+
+        while loop :
+            if interface[i,0]>time:
+                loop=False
+            else :
+                i+=1            
+        
+        if interface[i-1,0]==time:
+            self.height=interface[i-1,1]
+        else :
+            t1=interface[i-1,0]
+            t2=interface[i,0]
+
+            self.height=(t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1]
+    
+        print(self.height)
+   
+    def update_constant(self,T):
+        pass
+
+test=Reservoir()
+test.interface(900)
