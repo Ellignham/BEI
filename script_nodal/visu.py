@@ -90,33 +90,31 @@ def plot_champs_res(x, y, champs, time):
     """ 
     Plots a surface view of a reservoir-like geometry field. The field must be written in the non-structured form defined in Reservoir
     """
+    fig1=plt.figure()
+    # define grid.
+    xi = np.linspace(-5.1, 5.1, 800)
+    yi = np.linspace(-.1, 10.1, 1000)
+    #~ norm = mplc.Normalize(cmin, cmax)
+    #~ v = np.linspace(cmin, cmax, 100, endpoint=True)
+    # grid the data.
+    zi = griddata(x,y, champs, xi,yi, interp='linear')
+    bounds=np.linspace(zi.min(),zi.max(),100)
+    # contour the gridded data, plotting dots at the nonuniform data points.
+    CS = plt.contourf(xi, yi, zi,100, levels=bounds, extend='max')
+    #~ plt.autumn()
+    cbar = fig1.colorbar(CS)
+    #~ plt.clim(vmin=cmin, vmax=cmax)
+    cbar.ax.set_ylabel('Temperature')
+    # plot data points.
+    #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
+    #~ plt.xlim(-0.1, 0.6)
+    #~ plt.ylim(-0.1, 1.1)
 
-	
-	fig1=plt.figure()	
-
-	# define grid.
-	xi = np.linspace(-2.5, 2.5, 100)
-	yi = np.linspace(-.1, 10.1, 200)
-	# grid the data.
-	zi = griddata(x,y, champs, xi,yi, interp='linear')
-	# contour the gridded data, plotting dots at the nonuniform data points.
-	#~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
-	#~ CS = plt.contourf(xi, yi, zi, 100,
-					  #~ vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=plt.cm.bone, origin='upper')
-	CS = plt.contourf(xi, yi, zi, 100,
-					   cmap=plt.cm.rainbow)
-	cbar = fig1.colorbar(CS)
-	cbar.ax.set_ylabel('champs')
-	#~ plt.colorbar()  # draw colorbar
-	# plot data points.
-	plt.scatter(x, y, marker='o', s=5, zorder=10)
-	#~ plt.xlim(-2, 2)
-	#~ plt.ylim(-2, 2)
-
-	plt.xlabel('x')
-	plt.ylabel('y')
-	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
-	plt.show()
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('%(h)s au bout de %(g)s secondes'%{'g' : time, 'h' : 'champs'})
+    plt.show()('res_%(g)s.png'%{'g' : '%06d' %  j})
+    plt.close()
 
 def save_champs_res(x, y, champs, time, cmax, cmin, j):
     """ 
@@ -124,8 +122,8 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     """
     fig1=plt.figure()
     # define grid.
-    xi = np.linspace(-0.1, 0.6, 800)
-    yi = np.linspace(-.1, 1.1, 1000)
+    xi = np.linspace(-0.1, 0.6, 2000)
+    yi = np.linspace(-.1, 10.1, 10000)
     norm = mplc.Normalize(cmin, cmax)
     #~ v = np.linspace(cmin, cmax, 100, endpoint=True)
     bounds=np.linspace(cmin,cmax,100)
@@ -139,8 +137,8 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     cbar.ax.set_ylabel('Temperature')
     # plot data points.
     #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
-    #~ plt.xlim(-2, 2)
-    #~ plt.ylim(-2, 2)
+    #~ plt.xlim(-0.1, 0.6)
+    #~ plt.ylim(-0.1, 1.1)
 
     plt.xlabel('x')
     plt.ylabel('y')

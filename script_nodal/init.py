@@ -361,7 +361,7 @@ class Init(Input):
         #Creation of the phase array
         self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
 
-        #Initialisation of the phase array (phi = 1 => liquid)
+        #Initialisation of the phase array (phi = 1 => gas)
         self.phi[:]=0.
 
     def init_domain_cart(self):

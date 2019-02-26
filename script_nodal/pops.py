@@ -54,45 +54,45 @@ class Reservoir(Init) :
     def systeme_cond(self, T, dT_dt, time=0.0):
         taille=len(T)
         for idnode in range(taille) :
-			j=1
-			dT_dt[idnode]=0
-			C=1./self.C[idnode]
-			#~ C=1.
-			#~ print(int(self.neig[idnode,j]))
-			while ((int(self.neig[idnode,j]) != -1)):
-				#~ print('toto')
-				if self.R[idnode,j] !=0. :
-					G=1./self.R[idnode,j]
-					ng=int(self.neig[idnode,j])
-					deltaT=T[ng] - T[idnode]
-					dT_dt[idnode]+= G*deltaT				
-				j+=1
-			dT_dt[idnode]=dT_dt[idnode] * C
+            j=1
+            dT_dt[idnode]=0
+            C=1./self.C[idnode]
+            #~ C=1.
+            #~ print(int(self.neig[idnode,j]))
+            while ((int(self.neig[idnode,j]) != -1)):
+                #~ print('toto')
+                if self.R[idnode,j] !=0. :
+                    G=1./self.R[idnode,j]
+                    ng=int(self.neig[idnode,j])
+                    deltaT=T[ng] - T[idnode]
+                    dT_dt[idnode]+= G*deltaT				
+                j+=1
+            dT_dt[idnode]=dT_dt[idnode] * C
             
     def systeme_diph(self, T, dT_dt, time=0.0):
         phi_old = np.copy(self.phi)
         #~ update tableau des phi : a rajouter
         #~ calcul des flux
-        flux_pc = self.Hlv * (self.phi - phi_old)
+        flux_pc = -self.Hlv * (self.phi - phi_old)
         taille=len(T)
         for idnode in range(taille) :
-			j=1
-			dT_dt[idnode]=0
-			C=1./self.C[idnode]
+            j=1
+            dT_dt[idnode]=0
+            C=1./self.C[idnode]
             
-			#~ C=1.
-			#~ print(int(self.neig[idnode,j]))
-			while ((int(self.neig[idnode,j]) != -1)):
-				#~ print('toto')
-				if self.R[idnode,j] !=0. :
+            #~ C=1.
+            #~ print(int(self.neig[idnode,j]))
+            while ((int(self.neig[idnode,j]) != -1)):
+                #~ print('toto')
+                if self.R[idnode,j] !=0. :
                     #~ flux provenant des autres noeuds par conduction 
-					G=1./self.R[idnode,j]
-					ng=int(self.neig[idnode,j])
-					deltaT=T[ng] - T[idnode]
-					dT_dt[idnode]+= G*deltaT				
-				j+=1
+                    G=1./self.R[idnode,j]
+                    ng=int(self.neig[idnode,j])
+                    deltaT=T[ng] - T[idnode]
+                    dT_dt[idnode]+= G*deltaT				
+                j+=1
             #~ bilan des flux
-			dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
+            dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
             
 
     def interface(self,time):
@@ -146,14 +146,44 @@ class Reservoir(Init) :
         for k in range(0,len(gradTG)):
             moyG+=gradTG[k]
         moyG=moyG/len(gradTG)
-
+	
         self.dz=abs((1/self.Hlv)*(self.k_liq*moyL-self.k_gas*moyG))
+        
+        
+    def update_phi(self):
+        
+        #~ Creation du domaine de changement de phase 
+        yimin=self.height-self.dz
+        yimax=self.height+self.dz
+        a= 1. / (yimax - yimin)
+        
+        #~ Calcul dans domaine pc
+        imin=self.nodes[:,1]>yimin
+        imax=self.nodes[:,1]<yimax
+        it=np.where(imin*imax)
+        self.phi[it] = a * ( self.nodes[it,1] - yimin)
 
-#test=Reservoir()
-#test.domain_tank()
-#test.init_domain_tank()
-#test.initemp_tank_y()
-#test.dz=test.nodes[test.Nptsx,1]-test.nodes[0,1]
-#print(test.dz)
-#test.interface(9216)
-#print(test.dz)
+        #~ Domaine liquide 
+        imin=self.nodes[:,1]<yimin
+        it=np.where(imin)
+        self.phi[it] = 0.
+
+        #~ Domaine gaz 
+        imax=self.nodes[:,1]>yimax
+        it=np.where(imax)
+        self.phi[it] = 1.
+
+
+pts=[]
+test=Reservoir()
+test.domain_tank()
+test.init_domain_tank()
+test.initemp_tank_y()
+test.interface(9216)
+
+test.update_phi()
+
+exec(open("./visu.py").read())
+temps, temperature, x, y = reconstruct_champs(test, 'ResultArray.dat')
+plot_champs_res(x, y, test.phi, temps[0])
+
