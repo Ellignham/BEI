@@ -371,7 +371,6 @@ class Init(Input):
 
         Variables :
 
-        temp        : array containing the temperature field [K]
         pres        : array containing the pressure field [Pa]
 
         U           : array containing the x velocity field [m/s]
@@ -380,17 +379,8 @@ class Init(Input):
         R           : array containing the conduction thermal resistance [K.m/W]
         C           : array containing the conduction thermal capacity
 
-        phi         : array describing whether the fluid is liquid or gas 1= liquid
         """
-        #Creation of the phase array
-        self.phi = np.zeros((self.Nptsx*self.Nptsy))
-        
-        #Initialisation of the phase array
-        self.phi[:] = 0.
-
-        #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy))
-        
+       
         #Creation of the pressure array
         self.pres = np.zeros((self.Nptsx*self.Nptsy)) 
         self.pres[:] = (self.phi[:]*self.pgas_init+(1-self.phi[:])*self.pliq_init)
@@ -416,7 +406,6 @@ class Init(Input):
 
         Variables :
 
-        temp        : array containing the temperature field [K]
         pres        : array containing the pressure field [Pa]
 
         U           : array containing the x velocity field [m/s]
@@ -425,17 +414,9 @@ class Init(Input):
         R           : array containing the conduction thermal resistance [K.m/W]
         C           : array containing the conduction thermal capacity
 
-        phi         : array describing whether the fluid is liquid or gas 
         """
-        #Creation of the phase array
-        self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-
-        #Initialisation of the phase array
-        self.phi[:]=1
        
-        #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        
+       
         #Creation of the pressure array
         self.pres = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta)) 
         self.pres[:] = (self.phi[:]*self.pgas_init+(1-self.phi[:])*self.pliq_init) 
@@ -454,6 +435,8 @@ class Init(Input):
         self.C = np.zeros((self.Nptsy*self.Nptsx+2*(self.Nptsx-1)*self.ntheta))
    
     def initemp_cart_y(self):
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy))
         for k in range(0,self.Nptsx*self.Nptsy):
             if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
@@ -461,6 +444,8 @@ class Init(Input):
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
               
     def initemp_cart_x(self):
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy))
         for k in range(0,self.Nptsx*self.Nptsy):
             if self.nodes[k,2]<self.Lx/4:
                 self.temp[k]=self.T1
@@ -468,6 +453,8 @@ class Init(Input):
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
 			
     def initemp_tank_y(self):
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
@@ -476,12 +463,20 @@ class Init(Input):
                 
 
     def initemp_tank_x(self):
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
             if self.nodes[k,2]<self.Lx/4:
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
  
+    def initemp_tank(self):
+        #Creation of the temperature array
+        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+        for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
+            self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
+    
     def resistance_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
