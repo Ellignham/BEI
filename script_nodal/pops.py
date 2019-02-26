@@ -72,7 +72,7 @@ class Reservoir(Init) :
     def systeme_diph(self, T, dT_dt, time=0.0):
         phi_old = np.copy(self.phi)
         #~ update tableau des phi : a rajouter
-        #~ calcul des flux
+        #~ calcul des flux  (isentropique)
         flux_pc = -self.Hlv * (self.phi - phi_old)
         taille=len(T)
         for idnode in range(taille) :
@@ -163,12 +163,12 @@ class Reservoir(Init) :
         it=np.where(imin*imax)
         self.phi[it] = a * ( self.nodes[it,1] - yimin)
 
-        #~ Domaine liquide 
+        #~ Domaine liquide (bas)
         imin=self.nodes[:,1]<yimin
         it=np.where(imin)
         self.phi[it] = 0.
 
-        #~ Domaine gaz 
+        #~ Domaine gaz (haut)
         imax=self.nodes[:,1]>yimax
         it=np.where(imax)
         self.phi[it] = 1.
