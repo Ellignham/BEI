@@ -95,7 +95,7 @@ class Reservoir(Init) :
             dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
             
 
-    def interface(self,time,dz,pts):
+    def interface(self,time):
         '''
         Computes the position and width of the interface
         '''
@@ -122,15 +122,36 @@ class Reservoir(Init) :
         #Points around the interface
         pts=[]
         for idnode in range(0,len(self.temp)):
-            if abs(self.nodes[idnode,1]-self.height)<=dz :
+            if abs(self.nodes[idnode,1]-self.height)<=self.dz :
                 pts.append(idnode)
-        #Width of the interface 
-        gradTliq=0
-        
+        #Width of the interface
+        gradTL=[]
+        gradTG=[]
+ 
+        for k in range(0,len(pts)):
+            #below the interface
+            if self.nodes[pts[k],1]<self.height :
+                grad=(self.Tint_liq-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
+                gradTL.append(grad)
+            #above the interface
+            else :
+                grad=(self.Tint_gas-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
+                gradTG.append(grad)
+        moyL=0
+        for k in range(0,len(gradTL)): 
+            moyL+=gradTL[k]
+        moyL=moyL/len(gradTL)
+
+        moyG=0
+        for k in range(0,len(gradTG)):
+            moyG+=gradTG[k]
+        moyG=moyG/len(gradTG)
+	
+        self.dz=abs((1/self.Hlv)*(self.k_liq*moyL-self.k_gas*moyG))
     def update_phi(self):
         yimin=self.height-self.dz
         yimax=self.height+self.dz
-        
+
 
 
 #pts=[]
