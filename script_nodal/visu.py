@@ -92,31 +92,31 @@ def plot_champs_res(x, y, champs, time):
     """
 
 	
-	fig1=plt.figure()	
+    fig1=plt.figure()	
 
-	# define grid.
-	xi = np.linspace(-2.5, 2.5, 100)
-	yi = np.linspace(-.1, 10.1, 200)
-	# grid the data.
-	zi = griddata(x,y, champs, xi,yi, interp='linear')
-	# contour the gridded data, plotting dots at the nonuniform data points.
-	#~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
-	#~ CS = plt.contourf(xi, yi, zi, 100,
-					  #~ vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=plt.cm.bone, origin='upper')
-	CS = plt.contourf(xi, yi, zi, 100,
-					   cmap=plt.cm.rainbow)
-	cbar = fig1.colorbar(CS)
-	cbar.ax.set_ylabel('champs')
-	#~ plt.colorbar()  # draw colorbar
-	# plot data points.
-	plt.scatter(x, y, marker='o', s=5, zorder=10)
-	#~ plt.xlim(-2, 2)
-	#~ plt.ylim(-2, 2)
+    # define grid.
+    xi = np.linspace(-2.5, 2.5, 100)
+    yi = np.linspace(-.1, 10.1, 200)
+    # grid the data.
+    zi = griddata(x,y, champs, xi,yi, interp='linear')
+    # contour the gridded data, plotting dots at the nonuniform data points.
+    #~ CS = plt.contour(xi, yi, zi, 15, linewidths=0.5, colors='k')
+    #~ CS = plt.contourf(xi, yi, zi, 100,
+                      #~ vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=plt.cm.bone, origin='upper')
+    CS = plt.contourf(xi, yi, zi, 100,
+                       cmap=plt.cm.rainbow)
+    cbar = fig1.colorbar(CS)
+    cbar.ax.set_ylabel('champs')
+    #~ plt.colorbar()  # draw colorbar
+    # plot data points.
+    plt.scatter(x, y, marker='o', s=5, zorder=10)
+    #~ plt.xlim(-2, 2)
+    #~ plt.ylim(-2, 2)
 
-	plt.xlabel('x')
-	plt.ylabel('y')
-	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
-	plt.show()
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
+    plt.show()
 
 def save_champs_res(x, y, champs, time, cmax, cmin, j):
     """ 
@@ -139,8 +139,8 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     cbar.ax.set_ylabel('Temperature')
     # plot data points.
     #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
-    #~ plt.xlim(-2, 2)
-    #~ plt.ylim(-2, 2)
+    #~ plt.xlim(-0.1, 0.6)
+    #~ plt.ylim(-0.1, 1.1)
 
     plt.xlabel('x')
     plt.ylabel('y')
