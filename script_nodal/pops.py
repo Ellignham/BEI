@@ -148,16 +148,42 @@ class Reservoir(Init) :
         moyG=moyG/len(gradTG)
 	
         self.dz=abs((1/self.Hlv)*(self.k_liq*moyL-self.k_gas*moyG))
+        
+        
     def update_phi(self):
+        
+        #~ Creation du domaine de changement de phase 
         yimin=self.height-self.dz
         yimax=self.height+self.dz
+        a= 1. / (yimax - yimin)
+        
+        #~ Calcul dans domaine pc
+        imin=self.nodes[:,1]>yimin
+        imax=self.nodes[:,1]<yimax
+        it=np.where(imin*imax)
+        self.phi[it] = a * ( self.nodes[it,1] - yimin)
+
+        #~ Domaine liquide 
+        imin=self.nodes[:,1]<yimin
+        it=np.where(imin)
+        self.phi[it] = 0.
+
+        #~ Domaine gaz 
+        imax=self.nodes[:,1]>yimax
+        it=np.where(imax)
+        self.phi[it] = 1.
 
 
+pts=[]
+test=Reservoir()
+test.domain_tank()
+test.init_domain_tank()
+test.initemp_tank_y()
+test.interface(9216)
 
-#pts=[]
-#test=Reservoir()
-#test.domain_tank()
-#test.init_domain_tank()
-#test.initemp_tank_y()
-#dy=test.nodes[test.Nptsx,1]-test.nodes[0,1]
-#test.interface(9216,dy,pts)
+test.update_phi()
+
+exec(open("./visu.py").read())
+temps, temperature, x, y = reconstruct_champs(test, 'ResultArray.dat')
+plot_champs_res(x, y, test.phi, temps[0])
+

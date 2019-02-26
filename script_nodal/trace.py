@@ -24,7 +24,7 @@ Reservoir1=Reservoir()
 if (Reservoir1.mesh_type=='cart'):
     Reservoir1.domain_cart()
     Reservoir1.init_domain_cart()
-    Reservoir1.initemp_cart_x()
+    #~ Reservoir1.initemp_cart_x()
     Reservoir1.resistance_cart()
 elif (Reservoir1.mesh_type=='tank'):
     Reservoir1.domain_tank()
@@ -46,14 +46,10 @@ if os.path.isfile('./ResultArray.dat') :
 		Reservoir1=Reservoir()
 		Reservoir1.domain_tank()
 		Reservoir1.init_domain_tank()
-		#~ Reservoir1.initemp_tank_x()
-		#~ Reservoir1.resistance_tank()
 		#~Version totale 
 		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
-		#~ Reservoir1.temp2d=Reservoir1.temp
-		#~ plot_champs_res(x, y, temperature[-1], temps[-1])
-		save_png(x,y,temperature,temps)
-	
+		#~ save_png(x,y,temperature,temps)
+		plot_champs_res(x, y, Rese, temps):
 
 else :
 	print('Run python pops.py before visualisation')
