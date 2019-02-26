@@ -106,14 +106,14 @@ def plot_champs_res(x, y, champs, time):
     #~ plt.clim(vmin=cmin, vmax=cmax)
     cbar.ax.set_ylabel('Temperature')
     # plot data points.
-    #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
+    plt.scatter(x, y, marker='o', s=5, zorder=10)
     #~ plt.xlim(-0.1, 0.6)
     #~ plt.ylim(-0.1, 1.1)
 
     plt.xlabel('x')
     plt.ylabel('y')
     plt.title('%(h)s au bout de %(g)s secondes'%{'g' : time, 'h' : 'champs'})
-    plt.show()('res_%(g)s.png'%{'g' : '%06d' %  j})
+    plt.show()()
     plt.close()
 
 def save_champs_res(x, y, champs, time, cmax, cmin, j):
@@ -173,35 +173,45 @@ def plot_pres(self):
 	plt.title('Pressure')
 
 def ecriture_csv(ProblemSize,temps,Reservoir):
-	"""
-	Reads and write the array in csv format for Paraview
-	"""
+    """
+    Reads and write the array in csv format for Paraview
+    """
+    ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
+    liste=["x","y","z","Temperature"]
+
+    if(Reservoir.mesh_type=='cart'):
+
+        if os.path.isdir('ArrayTemp_cart') :
+            pass
+        else :
+            os.mkdir('ArrayTemp_cart')
+
+        for j in range(0,len(temps)):
+            f=open("ArrayTemp_cart/ArrayTemp_cart.csv.{}".format(j),"wb")
+            ArrayTemp[:,0]=Reservoir.nodes[:,2]
+            ArrayTemp[:,1]=Reservoir.nodes[:,1]
+            ArrayTemp[:,2]=0
+            ArrayTemp[:,3]=temp[j]
+            writer=csv.writer(f,delimiter=',')
+            writer.writerow(liste)
+            writer.writerows(ArrayTemp)
+    if (Reservoir.mesh_type == 'tank') :
+            
+        if os.path.isdir('ArrayTemp_tank') :
+            pass
+        else :
+            os.mkdir('ArrayTemp_tank')
 
 
-
-	ArrayTemp=np.zeros((ProblemSize,4),dtype=float)
-	liste=["x","y","z","Temperature"]
-	
-	if(Reservoir.mesh_type=='cart'):
-		for j in range(0,len(temps)):
-			f=open("ArrayTemp_cart/ArrayTemp_cart.csv.{}".format(j),"wb")
-			ArrayTemp[:,0]=Reservoir.nodes[:,2]
-			ArrayTemp[:,1]=Reservoir.nodes[:,1]
-			ArrayTemp[:,2]=0
-			ArrayTemp[:,3]=temp[j]
-			writer=csv.writer(f,delimiter=',')
-			writer.writerow(liste)
-			writer.writerows(ArrayTemp)
-	else:
-		for j in range(0,len(temps)):
-			f=open("ArrayTemp_tank/ArrayTemp_tank.csv.{}".format(j),"wb")
-			ArrayTemp[:,0]=Reservoir.nodes[:,2]
-			ArrayTemp[:,1]=Reservoir.nodes[:,1]
-			ArrayTemp[:,2]=0
-			ArrayTemp[:,3]=temp[j]
-			writer=csv.writer(f,delimiter=',')
-			writer.writerow(liste)
-			writer.writerows(ArrayTemp)
+        for j in range(0,len(temps)):
+            f=open("ArrayTemp_tank/ArrayTemp_tank.csv.{}".format(j),"wb")
+            ArrayTemp[:,0]=Reservoir.nodes[:,2]
+            ArrayTemp[:,1]=Reservoir.nodes[:,1]
+            ArrayTemp[:,2]=0
+            ArrayTemp[:,3]=temp[j]
+            writer=csv.writer(f,delimiter=',')
+            writer.writerow(liste)
+            writer.writerows(ArrayTemp)
 
 
 #~ vmax=abs(zi).max(), vmin=-abs(zi).max(),
