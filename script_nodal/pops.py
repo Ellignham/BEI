@@ -52,8 +52,8 @@ class Reservoir(Init) :
             temp[:]=np.copy(self.temp)
 
     def systeme_cond(self, T, dT_dt, time=0.0):
-		taille=len(T)
-		for idnode in range(taille) :
+        taille=len(T)
+        for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
 			C=1./self.C[idnode]
@@ -74,8 +74,8 @@ class Reservoir(Init) :
         #~ update tableau des phi : a rajouter
         #~ calcul des flux
         flux_pc = self.Hlv * (self.phi - phi_old)
-		taille=len(T)
-		for idnode in range(taille) :
+        taille=len(T)
+        for idnode in range(taille) :
 			j=1
 			dT_dt[idnode]=0
 			C=1./self.C[idnode]
@@ -95,7 +95,7 @@ class Reservoir(Init) :
 			dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
             
 
-    def interface(self,time,dz,pts):
+    def interface(self,time):
         '''
         Computes the position and width of the interface
         '''
@@ -122,15 +122,38 @@ class Reservoir(Init) :
         #Points around the interface
         pts=[]
         for idnode in range(0,len(self.temp)):
-            if abs(self.nodes[idnode,1]-self.height)<=dz :
+            if abs(self.nodes[idnode,1]-self.height)<=self.dz :
                 pts.append(idnode)
-        #Width of the interface 
-        gradTliq=0
+        #Width of the interface
+        gradTL=[]
+        gradTG=[]
+ 
+        for k in range(0,len(pts)):
+            #below the interface
+            if self.nodes[pts[k],1]<self.height :
+                grad=(self.Tint_liq-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
+                gradTL.append(grad)
+            #above the interface
+            else :
+                grad=(self.Tint_gas-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
+                gradTG.append(grad)
+        moyL=0
+        for k in range(0,len(gradTL)): 
+            moyL+=gradTL[k]
+        moyL=moyL/len(gradTL)
 
-#pts=[]
+        moyG=0
+        for k in range(0,len(gradTG)):
+            moyG+=gradTG[k]
+        moyG=moyG/len(gradTG)
+
+        self.dz=abs((1/self.Hlv)*(self.k_liq*moyL-self.k_gas*moyG))
+
 #test=Reservoir()
 #test.domain_tank()
 #test.init_domain_tank()
 #test.initemp_tank_y()
-#dy=test.nodes[test.Nptsx,1]-test.nodes[0,1]
-#test.interface(9216,dy,pts)
+#test.dz=test.nodes[test.Nptsx,1]-test.nodes[0,1]
+#print(test.dz)
+#test.interface(9216)
+#print(test.dz)
