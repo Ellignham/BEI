@@ -40,7 +40,7 @@ SavedIteration=100
 Error=1e-8
 
 
-Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_cond,METHODE,\
+Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_diph,METHODE,\
 MAXNTIMESTEP,ProblemSize,TimeStep=TIMESTEP,\
 Duration=Duration,AdaptativeTimeStep=AdapTimeStepBool,\
 NbIterationSaved=SavedIteration,\

@@ -40,14 +40,25 @@ class Reservoir(Init) :
             self.capacite_cart()
             temp[:]=np.copy(self.temp)
         elif (self.mesh_type=='tank'):
-            self.init_phase_tank()
+            #~ Generation du maillage
             self.domain_tank()
+            #~ Initialisation de la fonction de phase (uniforme a 0 => liq)
+            self.init_phase_tank()
+            #~ Trouve la hauteur initiale de l'interface
+            self.hauteur_interface(self.time_init)
+            #~ initialise le champs de temp avec l'interface
+            self.initemp_tank()
+            #~ Calcul de phi initial avec interface
+            self.update_phi()
+            #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
+            #~ Initialise pres, vitesse
             self.init_domain_tank()
-            #~ self.domain[:,0]=self.nodes[:,2]
-            #~ self.domain[:,1]=self.nodes[:,1]
+
+
+
+            #~ Initialise les resistance
             self.resistance_tank()
-            self.initemp_tank_x()
-            #~ self.initemp_tank_y()
+            #~ Initialise les capacites des noeuds dans le tank
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
 
@@ -69,9 +80,16 @@ class Reservoir(Init) :
                 j+=1
             dT_dt[idnode]=dT_dt[idnode] * C
             
+            
+            
+            
     def systeme_diph(self, T, dT_dt, time=0.0):
+        
+        self.hauteur_interface(self.time_init)
+        
         phi_old = np.copy(self.phi)
-        #~ update tableau des phi : a rajouter
+        #~ update tableau des phi
+        self.update_phi()
         #~ calcul des flux  (isentropique)
         flux_pc = -self.Hlv * (self.phi - phi_old)
         taille=len(T)
