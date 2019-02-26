@@ -95,9 +95,9 @@ class Reservoir(Init) :
             dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
             
 
-    def interface(self,time):
+    def hauteur_interface(self,time):
         '''
-        Computes the position and width of the interface
+        Computes the position of the interface
         '''
         interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
         #print(interface)
@@ -119,6 +119,7 @@ class Reservoir(Init) :
 
             self.height=(t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1]*self.Ly
    
+    def width_interface(self):
         #Points around the interface
         pts=[]
         for idnode in range(0,len(self.temp)):
