@@ -48,11 +48,12 @@ class Reservoir(Init) :
             self.hauteur_interface(self.time_init)
             #~ Calcul de phi initial avec interface
             self.update_phi()
-            #~ initialise le champs de temp avec l'interface
-            self.initemp()
             #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
             #~ Initialise pres, vitesse
             self.init_domain()
+            #~ initialise le champs de temp avec l'interface
+            self.initemp()
+
 
 
 
@@ -61,6 +62,10 @@ class Reservoir(Init) :
             #~ Initialise les capacites des noeuds dans le tank
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
+                
+            
+            
+            
 
     def systeme_cond(self, T, dT_dt):
         taille=len(T)
@@ -83,11 +88,15 @@ class Reservoir(Init) :
             
             
             
-    def systeme_diph(self, T, dT_dt, time=-1):
-        if time == -1 :
+            
+            
+            
+            
+    def systeme_diph(self, T, dT_dt,time=0.0):
+        if time == 0. :
             time = self.time_init
         
-        self.hauteur_interface(self.time_init)
+        self.hauteur_interface(time)
         self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
@@ -119,6 +128,7 @@ class Reservoir(Init) :
         '''
         Computes the position of the interface
         '''
+        print(time)
         interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
         #print(interface)
 
@@ -193,7 +203,6 @@ class Reservoir(Init) :
         imax=self.nodes[:,1]>yimax
         it=np.where(imax)
         self.phi[it] = 1.
-
 
 '''
 test=Reservoir()
