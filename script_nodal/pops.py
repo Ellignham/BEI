@@ -152,11 +152,11 @@ class Reservoir(Init) :
         for k in range(0,len(pts)):
             #below the interface
             if self.nodes[pts[k],1]<self.height :
-                grad=(self.Tint_liq-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
+                grad=(self.Tint-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
                 gradTL.append(grad)
             #above the interface
             else :
-                grad=(self.Tint_gas-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
+                grad=(self.Tint-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
                 gradTG.append(grad)
         moyL=0
         for k in range(0,len(gradTL)): 
