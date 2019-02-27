@@ -29,25 +29,25 @@ class Reservoir(Init) :
 	
     def systeme_init(self, temp) :
         if (self.mesh_type=='cart'):
-            self.init_phase_cart()
+            self.init_phase()
             self.domain_cart()
-            self.init_domain_cart()
+            self.init_domain()
             #~ self.domain[:,0]=self.nodes[:,2]
             #~ self.domain[:,1]=self.nodes[:,1]
             self.resistance_cart()
             #self.initemp_cart_x()
-            self.initemp_cart_y()
+            self.initemp_y()
             self.capacite_cart()
             temp[:]=np.copy(self.temp)
         elif (self.mesh_type=='tank'):
             #~ Generation du maillage
             self.domain_tank()
             #~ Initialisation de la fonction de phase (uniforme a 0 => liq)
-            self.init_phase_tank()
+            self.init_phase()
             #~ Trouve la hauteur initiale de l'interface
             self.hauteur_interface(self.time_init)
             #~ initialise le champs de temp avec l'interface
-            self.initemp_tank()
+            self.initemp()
             #~ Calcul de phi initial avec interface
             self.update_phi()
             #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa

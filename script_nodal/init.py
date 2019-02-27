@@ -31,11 +31,13 @@ class Init(Input):
         self.y = np.linspace(self.Lx/2,self.Ly-self.Lx/2,self.Nptsy)
 
         if (self.mesh_type=='cart'):
-            self.nodes = np.zeros((self.Nptsx*self.Nptsy,3))
-            self.neig = np.zeros((self.Nptsx*self.Nptsy,6))
+            self.dom_size=self.Nptsx*self.Nptsy
+            self.nodes = np.zeros((self.dom_size,3))
+            self.neig = np.zeros((self.dom_size,6))
         else:
-            self.nodes = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,3))
-            self.neig = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta,5+self.ntheta))
+            self.dom_size=self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta
+            self.nodes = np.zeros((self.dom_size,3))
+            self.neig = np.zeros((self.dom_size,5+self.ntheta))
 
 
     def domain_cart(self):
@@ -344,27 +346,17 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
                     
-    def init_phase_cart(self):
+    def init_phase(self):
         """
         phi         : array describing whether the fluid is liquid or gas 
         """
         #Creation of the phase array
-        self.phi = np.zeros((self.Nptsx*self.Nptsy))
-
-        #Initialisation of the phase array
-        self.phi[:]=0.
-
-    def init_phase_tank(self):
-        """
-        phi         : array describing whether the fluid is liquid or gas 
-        """
-        #Creation of the phase array
-        self.phi = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+        self.phi = np.zeros((self.dom_size))
 
         #Initialisation of the phase array (phi = 1 => gas)
         self.phi[:]=0.
 
-    def init_domain_cart(self):
+    def init_domain(self):
         """
         Initialise the domain before the computation
 
@@ -382,105 +374,50 @@ class Init(Input):
         """
        
         #Creation of the pressure array
-        self.pres = np.zeros((self.Nptsx*self.Nptsy)) 
+        self.pres = np.zeros((self.dom_size)) 
         self.pres[:] = (self.phi[:]*self.pgas_init+(1-self.phi[:])*self.pliq_init)
         
         #Creation of the velocity fields
-        self.U = np.zeros((self.Nptsx*self.Nptsy))
-        self.V = np.zeros((self.Nptsx*self.Nptsy))
+        self.U = np.zeros((self.dom_size))
+        self.V = np.zeros((self.dom_size))
         self.U[:]=(self.phi[:]*self.ugas_init+(1-self.phi[:])*self.uliq_init)
         self.V[:]=(self.phi[:]*self.vgas_init+(1-self.phi[:])*self.vliq_init)
 
         #Creation of thermal resistance arrays
-        self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
+        self.R = np.zeros((self.dom_size, 5))#.reshape((len(self.nodes),1))
         #~ np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
         
         #Creation of thermal capacity array
-        self.C = np.zeros((self.Nptsy*self.Nptsx))
+        self.C = np.zeros((self.dom_size))
    
-
-    def init_domain_tank(self):
-        """
-        Initialise the domain before the computation
-
-
-        Variables :
-
-        pres        : array containing the pressure field [Pa]
-
-        U           : array containing the x velocity field [m/s]
-        V           : array containing the y velocity field [m/s]
-
-        R           : array containing the conduction thermal resistance [K.m/W]
-        C           : array containing the conduction thermal capacity
-
-        """
-       
-       
-        #Creation of the pressure array
-        self.pres = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta)) 
-        self.pres[:] = (self.phi[:]*self.pgas_init+(1-self.phi[:])*self.pliq_init) 
-        
-        #Creation of the velocity fields
-        self.U = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        self.V = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        self.U[:]=(self.phi[:]*self.ugas_init+(1-self.phi[:])*self.uliq_init)
-        self.V[:]=(self.phi[:]*self.vgas_init+(1-self.phi[:])*self.vliq_init)
-
-        #Creation of thermal resistance arrays
-        self.R = np.zeros((self.Nptsy*self.Nptsx, 5))#.reshape((len(self.nodes),1))
-        #~ np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        
-        #Creation of thermal capacity array
-        self.C = np.zeros((self.Nptsy*self.Nptsx+2*(self.Nptsx-1)*self.ntheta))
-   
-    def initemp_cart_y(self):
+    def initemp_y(self):
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy))
-        for k in range(0,self.Nptsx*self.Nptsy):
+        self.temp = np.zeros((self.dom_size))
+        for k in range(0,self.dom_size):
             if self.nodes[k,1]<self.Ly/2 :
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
               
-    def initemp_cart_x(self):
+    def initemp_x(self):
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy))
-        for k in range(0,self.Nptsx*self.Nptsy):
+        self.temp = np.zeros((self.dom_size))
+        for k in range(0,self.dom_size):
             if self.nodes[k,2]<self.Lx/4:
                 self.temp[k]=self.T1
             else :
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
 			
-    def initemp_tank_y(self):
+    def initemp(self):
         #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
-            if self.nodes[k,1]<self.Ly/2 :
-                self.temp[k]=self.T1
-            else :
-                self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
-                
-
-    def initemp_tank_x(self):
-        #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
-            if self.nodes[k,2]<self.Lx/4:
-                self.temp[k]=self.T1
-            else :
-                self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
- 
-    def initemp_tank(self):
-        #Creation of the temperature array
-        self.temp = np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
-        for k in range(0,self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta):
+        self.temp = np.zeros((self.dom_size))
+        for k in range(0,self.dom_size):
             self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
     
     def resistance_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
-        for idnode in range(self.Nptsy*self.Nptsx) :
+        for idnode in range(self.dom_size) :
             j=1
             self.R[idnode,0] = idnode
             while (j<5 and (int(self.neig[idnode,j]) != -1)):
@@ -500,7 +437,7 @@ class Init(Input):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
-        for idnode in range(self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta) :
+        for idnode in range(self.dom_size) :
             k_diph=(self.phi[idnode]*self.k_gas+(1-self.phi[idnode])*self.k_liq)
             #POINT CENTRE DU BAS
             if (idnode == self.Nptsx - 1) :
@@ -584,7 +521,7 @@ class Init(Input):
     def capacite_cart(self):
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
-        for idnode in range(self.Nptsy*self.Nptsx) :
+        for idnode in range(self.dom_size) :
             rho_diph=self.phi[idnode]*self.rho_gas+(1-self.phi[idnode])*self.rho_liq
             cp_diph=self.phi[idnode]*self.cp_gas+(1-self.phi[idnode])*self.cp_liq
             self.C[idnode] = rho_diph*cp_diph*dx*dy
@@ -592,7 +529,7 @@ class Init(Input):
     def capacite_tank(self):
         dx_cart=self.nodes[1,2] - self.nodes[0,2]
         dy_cart=self.nodes[self.Nptsx,1] - self.nodes[0,1]
-        for idnode in range(0,self.Nptsy*self.Nptsx+2*(self.Nptsx-1)*self.ntheta):
+        for idnode in range(0,self.dom_size):
             rho_diph=self.phi[idnode]*self.rho_gas+(1-self.phi[idnode])*self.rho_liq
             cp_diph=self.phi[idnode]*self.cp_gas+(1-self.phi[idnode])*self.cp_liq
             #middle of the 'rectangle part'
