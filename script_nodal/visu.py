@@ -86,7 +86,7 @@ def plot_champs_cart(dom, champs, time):
 	#~ milieu = (
 
 
-def plot_champs_res(x, y, champs, time):
+def plot_temp_int(dom, x, y, temp, time):
     """ 
     Plots a surface view of a reservoir-like geometry field. The field must be written in the non-structured form defined in Reservoir
     """
@@ -97,7 +97,7 @@ def plot_champs_res(x, y, champs, time):
     #~ norm = mplc.Normalize(cmin, cmax)
     #~ v = np.linspace(cmin, cmax, 100, endpoint=True)
     # grid the data.
-    zi = griddata(x,y, champs, xi,yi, interp='linear')
+    zi = griddata(x,y, temp, xi,yi, interp='linear')
     bounds=np.linspace(zi.min(),zi.max(),100)
     # contour the gridded data, plotting dots at the nonuniform data points.
     CS = plt.contourf(xi, yi, zi,100, levels=bounds, extend='max')
@@ -109,11 +109,11 @@ def plot_champs_res(x, y, champs, time):
     plt.scatter(x, y, marker='o', s=5, zorder=10)
     #~ plt.xlim(-0.1, 0.6)
     #~ plt.ylim(-0.1, 1.1)
-
+    plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.title('%(h)s au bout de %(g)s secondes'%{'g' : time, 'h' : 'champs'})
-    plt.show()()
+    plt.show()
     plt.close()
 
 def save_champs_res(x, y, champs, time, cmax, cmin, j):
@@ -213,7 +213,5 @@ def ecriture_csv(ProblemSize,temps,Reservoir):
             writer.writerow(liste)
             writer.writerows(ArrayTemp)
 
-
-#~ vmax=abs(zi).max(), vmin=-abs(zi).max(),
 
 

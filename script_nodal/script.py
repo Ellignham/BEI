@@ -44,7 +44,8 @@ Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_diph,M
 MAXNTIMESTEP,ProblemSize,TimeStep=TIMESTEP,\
 Duration=Duration,AdaptativeTimeStep=AdapTimeStepBool,\
 NbIterationSaved=SavedIteration,\
-ListOfIdVar=ListOfVariablesToSave,AdatativeTimeStep_Error=Error)
+ListOfIdVar=ListOfVariablesToSave,\
+AdatativeTimeStep_Error=Error)
 
 Problem.SolveDifferentialProblem()
 
@@ -56,7 +57,7 @@ TypeFrequency=1 # =0 : frequence d'iteration , =1 : frequence de temps
 TimeFrequency=1.0
 IterationFrequency=200
 temps, temp = lecture_champs('ResultArray.dat',TIMESTEP,SavedIteration,Duration,TimeFrequency,IterationFrequency,TypeFrequency)
-ecriture_csv(ProblemSize,temps,Reservoir1)	
+#~ ecriture_csv(ProblemSize,temps,Reservoir1)	
 
 
 #for i in range(len(temps)):
