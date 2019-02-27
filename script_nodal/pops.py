@@ -52,7 +52,7 @@ class Reservoir(Init) :
             self.initemp()
             #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
             #~ Initialise pres, vitesse
-            self.init_domain_tank()
+            self.init_domain()
 
 
 
