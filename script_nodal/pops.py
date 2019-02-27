@@ -46,10 +46,10 @@ class Reservoir(Init) :
             self.init_phase()
             #~ Trouve la hauteur initiale de l'interface
             self.hauteur_interface(self.time_init)
-            #~ initialise le champs de temp avec l'interface
-            self.initemp()
             #~ Calcul de phi initial avec interface
             self.update_phi()
+            #~ initialise le champs de temp avec l'interface
+            self.initemp()
             #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
             #~ Initialise pres, vitesse
             self.init_domain_tank()
@@ -86,7 +86,7 @@ class Reservoir(Init) :
     def systeme_diph(self, T, dT_dt, time=0.0):
         
         self.hauteur_interface(self.time_init)
-        
+        self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
         self.update_phi()
@@ -110,7 +110,7 @@ class Reservoir(Init) :
                     dT_dt[idnode]+= G*deltaT				
                 j+=1
             #~ bilan des flux
-            dT_dt[idnode]=dT_dt[idnode] * C + flux_pc
+            dT_dt[idnode]=dT_dt[idnode] * C + flux_pc[idnode]
             
 
     def hauteur_interface(self,time):
@@ -193,16 +193,22 @@ class Reservoir(Init) :
         self.phi[it] = 1.
 
 
-pts=[]
+'''
 test=Reservoir()
-test.domain_tank()
-test.init_domain_tank()
-test.initemp_tank_y()
-test.interface(9216)
 
-test.update_phi()
+if (test.mesh_type=='tank'):		
+    ProblemSize=test.Nptsx*test.Nptsy+2*(test.Nptsx-1)*test.ntheta
+elif (test.mesh_type=='cart'):
+    ProblemSize=test.Nptsx*test.Nptsy
+
+prout = np.zeros(ProblemSize)
+test.systeme_init(prout)
+#~ test.update_phi()
+
+#~ print(test.temp)
+#~ 
 
 exec(open("./visu.py").read())
 temps, temperature, x, y = reconstruct_champs(test, 'ResultArray.dat')
-plot_champs_res(x, y, test.phi, temps[0])
-
+plot_temp_int(test, x, y, test.temp, temps[0])
+'''
