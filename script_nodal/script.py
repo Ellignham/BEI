@@ -29,10 +29,9 @@ elif (Reservoir1.mesh_type=='cart'):
 
 
 listVar=[i for i in range(ProblemSize)]
-# ~ listVar=[0,1]
 AdapTimeStepBool=False
 Duration=6.
-MAXNTIMESTEP=100000000
+MAXNTIMESTEP=10000
 TIMESTEP=0.002
 METHODE='Euler'
 ListOfVariablesToSave=listVar
@@ -46,6 +45,7 @@ Duration=Duration,AdaptativeTimeStep=AdapTimeStepBool,\
 NbIterationSaved=SavedIteration,\
 ListOfIdVar=ListOfVariablesToSave,\
 AdatativeTimeStep_Error=Error)
+
 
 Problem.SolveDifferentialProblem()
 

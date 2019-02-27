@@ -106,7 +106,7 @@ def plot_temp_int(dom, x, y, temp, time):
     #~ plt.clim(vmin=cmin, vmax=cmax)
     cbar.ax.set_ylabel('Temperature')
     # plot data points.
-    plt.scatter(x, y, marker='o', s=5, zorder=10)
+    #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
     #~ plt.xlim(-0.1, 0.6)
     #~ plt.ylim(-0.1, 1.1)
     plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
