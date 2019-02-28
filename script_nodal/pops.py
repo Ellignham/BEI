@@ -45,7 +45,7 @@ class Reservoir(Init) :
             #~ Initialisation de la fonction de phase (uniforme a 0 => liq)
             self.init_phase()
             #~ Trouve la hauteur initiale de l'interface
-            self.hauteur_interface(self.time_init)
+            self.hauteur_interface(0.0)
             #~ Calcul de phi initial avec interface
             self.update_phi()
             #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
@@ -53,6 +53,7 @@ class Reservoir(Init) :
             self.init_domain()
             #~ initialise le champs de temp avec l'interface
             self.initemp()
+
 
 
 
@@ -87,12 +88,9 @@ class Reservoir(Init) :
             
             
             
-            
-            
-            
-            
-    def systeme_diph(self, T, dT_dt,time=0.0):
-        self.hauteur_interface(time+self.time_init)
+    def systeme_diph(self, T, dT_dt, time=0.0):
+        
+        self.hauteur_interface(time)
         self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
@@ -124,7 +122,8 @@ class Reservoir(Init) :
         '''
         Computes the position of the interface
         '''
-        print(time)
+        #print(interface)
+        time=time+self.time_init 
         interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
         #print(interface)
 
@@ -165,16 +164,20 @@ class Reservoir(Init) :
                 grad=(self.Tint-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
                 gradTG.append(grad)
         moyL=0
-        for k in range(0,len(gradTL)): 
-            moyL+=gradTL[k]
-        moyL=moyL/len(gradTL)
+        if len(gradTL)!=0 :
+            for k in range(0,len(gradTL)): 
+                moyL+=gradTL[k]
+            moyL=moyL/len(gradTL)
 
         moyG=0
-        for k in range(0,len(gradTG)):
-            moyG+=gradTG[k]
-        moyG=moyG/len(gradTG)
-	
-        self.dz=abs((1/self.Hlv)*(self.k_liq*moyL-self.k_gas*moyG))
+        if len(gradTG)!=0 :
+            for k in range(0,len(gradTG)):
+                moyG+=gradTG[k]
+            moyG=moyG/len(gradTG)
+
+        sect=self.Lx
+        	
+        self.dz=abs((1/self.Hlv*sect*self.rho_liq)*(self.k_liq*moyL-self.k_gas*moyG))
         
         
     def update_phi(self):
@@ -200,6 +203,8 @@ class Reservoir(Init) :
         it=np.where(imax)
         self.phi[it] = 1.
 
+
+'''
 test=Reservoir()
 
 if (test.mesh_type=='tank'):		
@@ -217,3 +222,4 @@ test.systeme_init(prout)
 exec(open("./visu.py").read())
 temps, temperature, x, y = reconstruct_champs(test, 'ResultArray.dat')
 plot_temp_int(test, x, y, test.temp, temps[0])
+'''
