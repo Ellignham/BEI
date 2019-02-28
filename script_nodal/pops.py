@@ -89,7 +89,6 @@ class Reservoir(Init) :
             
             
     def systeme_diph(self, T, dT_dt, time=0.0):
-        time=time+self.time_init
         
         self.hauteur_interface(time)
         self.width_interface()
@@ -123,8 +122,9 @@ class Reservoir(Init) :
         '''
         Computes the position of the interface
         '''
-        interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
         #print(interface)
+        time=time+self.time_init 
+        interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
 
         loop=True
         i=0
@@ -163,16 +163,20 @@ class Reservoir(Init) :
                 grad=(self.Tint-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
                 gradTG.append(grad)
         moyL=0
-        for k in range(0,len(gradTL)): 
-            moyL+=gradTL[k]
-        moyL=moyL/len(gradTL)
+        if len(gradTL)!=0 :
+            for k in range(0,len(gradTL)): 
+                moyL+=gradTL[k]
+            moyL=moyL/len(gradTL)
 
         moyG=0
-        for k in range(0,len(gradTG)):
-            moyG+=gradTG[k]
-        moyG=moyG/len(gradTG)
-	
-        self.dz=abs((1/self.Hlv)*(self.k_liq*moyL-self.k_gas*moyG))
+        if len(gradTG)!=0 :
+            for k in range(0,len(gradTG)):
+                moyG+=gradTG[k]
+            moyG=moyG/len(gradTG)
+
+        sect=self.Lx
+        	
+        self.dz=abs((1/self.Hlv*sect*self.rho_liq)*(self.k_liq*moyL-self.k_gas*moyG))
         
         
     def update_phi(self):
