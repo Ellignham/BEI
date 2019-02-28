@@ -48,11 +48,12 @@ class Reservoir(Init) :
             self.hauteur_interface(0.0)
             #~ Calcul de phi initial avec interface
             self.update_phi()
-            #~ initialise le champs de temp avec l'interface
-            self.initemp()
             #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
             #~ Initialise pres, vitesse
             self.init_domain()
+            #~ initialise le champs de temp avec l'interface
+            self.initemp()
+
 
 
 
@@ -61,6 +62,10 @@ class Reservoir(Init) :
             #~ Initialise les capacites des noeuds dans le tank
             self.capacite_tank()
             temp[:]=np.copy(self.temp)
+                
+            
+            
+            
 
     def systeme_cond(self, T, dT_dt):
         taille=len(T)
@@ -86,7 +91,7 @@ class Reservoir(Init) :
     def systeme_diph(self, T, dT_dt, time=0.0):
         time=time+self.time_init
         
-        self.hauteur_interface(self.time_init)
+        self.hauteur_interface(time)
         self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi

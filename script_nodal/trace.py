@@ -50,9 +50,10 @@ if os.path.isfile('./ResultArray.dat') :
 		
 		#~Version totale 
 		temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
+		print(temps[-1])
 		Reservoir1.hauteur_interface(temps[-1])
-		#~ save_png(x,y,temperature,temps)
-		plot_temp_int(Reservoir1, x, y, temperature[-1], temps[-1])
+		save_png(x,y,temperature,temps)
+		#~ plot_temp_int(Reservoir1, x, y, temperature[-1], temps[-1])
 
 else :
 	print('Run python pops.py before visualisation')

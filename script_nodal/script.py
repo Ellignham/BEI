@@ -37,6 +37,7 @@ METHODE='Euler'
 ListOfVariablesToSave=listVar
 SavedIteration=100
 Error=1e-8
+#time=9250
 
 
 Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_diph,METHODE,\
