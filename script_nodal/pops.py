@@ -147,21 +147,11 @@ class Reservoir(Init) :
     def width_interface(self):
         #Points around the interface
         pts=[]
-        #Points above the interface
-        if self.height<=self.Ly
-            toto=True
         epaisseur=self.dy
-        while toto :
-            #AJOUTER LE PARCOURS DES POINTS !!!  + essayer de faire ça "efficace" 
-            #(ne pas parcourir tous les points)
-            if self.nodes[idnode,1]-self.height<=epaisseur :
+        for idnode in range(0,self.dom_size):
+            if abs(self.nodes[idnode,1]-self.height)<=epaisseur :
                 pts.append(idnode)
-                toto=False
-            else :
-                epaisseur+=self.dz
                 
-        #Points below the interface
-        
         
         #Width of the interface
         gradTL=[]
@@ -177,9 +167,7 @@ class Reservoir(Init) :
                 grad=(self.Tint-self.temp[pts[k]])/(self.height-self.nodes[pts[k],1])
                 gradTG.append(grad)
         moyL=0
-            for k in range(0,len(gradTL)): 
-                moyL+=gradTL[k]
-            moyL=moyL/len(gradTL)        if len(gradTL)!=0 :
+        if len(gradTL)!=0:
             for k in range(0,len(gradTL)): 
                 moyL+=gradTL[k]
             moyL=moyL/len(gradTL)
