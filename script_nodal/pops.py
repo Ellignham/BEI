@@ -45,7 +45,7 @@ class Reservoir(Init) :
             #~ Initialisation de la fonction de phase (uniforme a 0 => liq)
             self.init_phase()
             #~ Trouve la hauteur initiale de l'interface
-            self.hauteur_interface(self.time_init)
+            self.hauteur_interface(0.0)
             #~ Calcul de phi initial avec interface
             self.update_phi()
             #~ initialise le champs de temp avec l'interface
@@ -83,9 +83,8 @@ class Reservoir(Init) :
             
             
             
-    def systeme_diph(self, T, dT_dt, time=-1):
-        if time == -1 :
-            time = self.time_init
+    def systeme_diph(self, T, dT_dt, time=0.0):
+        time=time+self.time_init
         
         self.hauteur_interface(self.time_init)
         self.width_interface()
