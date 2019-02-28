@@ -56,7 +56,6 @@ class Reservoir(Init) :
 
 
 
-
             #~ Initialise les resistance
             self.resistance_tank()
             #~ Initialise les capacites des noeuds dans le tank
@@ -93,10 +92,7 @@ class Reservoir(Init) :
             
             
     def systeme_diph(self, T, dT_dt,time=0.0):
-        if time == 0. :
-            time = self.time_init
-        
-        self.hauteur_interface(time)
+        self.hauteur_interface(time+self.time_init)
         self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
@@ -204,7 +200,6 @@ class Reservoir(Init) :
         it=np.where(imax)
         self.phi[it] = 1.
 
-'''
 test=Reservoir()
 
 if (test.mesh_type=='tank'):		
@@ -222,4 +217,3 @@ test.systeme_init(prout)
 exec(open("./visu.py").read())
 temps, temperature, x, y = reconstruct_champs(test, 'ResultArray.dat')
 plot_temp_int(test, x, y, test.temp, temps[0])
-'''
