@@ -56,4 +56,4 @@ if os.path.isfile('./ResultArray.dat') :
 		plot_temp_int(Reservoir1, x, y, temperature[-1], temps[-1]+self.time_init)
 
 else :
-	print('Run python pops.py before visualisation')
+	print('Run python script.py before visualisation')
