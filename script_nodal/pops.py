@@ -91,7 +91,6 @@ class Reservoir(Init) :
     def systeme_diph(self, T, dT_dt, time=0.0):
         
         self.hauteur_interface(time)
-        print('height=',self.height,'time =',time)
         self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
