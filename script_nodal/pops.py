@@ -91,6 +91,7 @@ class Reservoir(Init) :
     def systeme_diph(self, T, dT_dt, time=0.0):
         
         self.hauteur_interface(time)
+        print('height=',self.height,'time =',time)
         self.width_interface()
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
@@ -142,7 +143,7 @@ class Reservoir(Init) :
             t1=interface[i-1,0]
             t2=interface[i,0]
 
-            self.height=(t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1]*self.Ly
+            self.height=((t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1])*self.Ly
    
     def width_interface(self):
         #Points around the interface
@@ -205,7 +206,6 @@ class Reservoir(Init) :
         imax=self.nodes[:,1]>yimax
         it=np.where(imax)
         self.phi[it] = 1.
-
 
 '''
 test=Reservoir()
