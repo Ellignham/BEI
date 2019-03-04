@@ -509,7 +509,7 @@ class Init(Input):
                              
                             r2=max(rnode,rng)
                             r1=min(rnode,rng)
-                            res = np.log(r2/r1)/(2*np.pi*k_diph)
+                            res = np.log(r2/r1)*self.ntheta/(2*np.pi*k_diph)
                         else :
                             dxx=abs(self.nodes[ng,2] - self.nodes[idnode,2])
                             dyy=abs(self.nodes[ng,1] - self.nodes[idnode,1])		

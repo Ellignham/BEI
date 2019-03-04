@@ -56,7 +56,7 @@ def lecture_champs(fname,TIMESTEP,SavedIteration,Duration,TimeFrequency,Iteratio
 def reconstruct_champs(dom,fname):
 	"""
 	Reads the temporal evolution of the field contained in ResultArray.dat
-	return temps, and temperature table
+	return temps, x, y fields and temperature table
 	"""
 	data = np.loadtxt(fname, dtype='float', comments='#', delimiter=' ')
 	temps=data[:,0]
@@ -79,11 +79,6 @@ def plot_champs_cart(dom, champs, time):
 	plt.ylabel('y')
 	plt.title('Temperature au bout de %(g) secondes'%{'g' : time})
 	plt.show()
-	#~ 
-	#~ 
-#~ def plot_coupe_lx2(x, y, champs, dom, time) :
-	#~ plt.figure('Profil de temperature en coupe')
-	#~ milieu = (
 
 
 def plot_temp_int(dom, x, y, temp, time):
