@@ -347,7 +347,8 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
                     
 		self.dy = max(abs(np.diff(self.nodes[:,1])))
-                    
+        
+           
     def init_phase(self):
         """
         phi         : array describing whether the fluid is liquid or gas 
