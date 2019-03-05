@@ -145,7 +145,7 @@ def save_champs_res(dom, x, y, champs, time, cmax, cmin, j):
     plt.savefig('res_%(g)s.png'%{'g' : '%06d' %  j})
     plt.close()
 
-def save_png(x,y,champs_tab,time_tab):
+def save_png(dom, x,y,champs_tab,time_tab):
 	nframes=30
 	mult=len(time_tab) // nframes
 	j=0
@@ -157,7 +157,7 @@ def save_png(x,y,champs_tab,time_tab):
 	os.chdir('data')
 	while j <  len(time_tab) :
 		print('Saving figure %(g)s out of %(h)s in data directory'%{'g' : '%08d' % j, 'h' :  str(len(time_tab))})
-		save_champs_res(x, y, champs_tab[j], time_tab[j], champs_tab.max(), champs_tab.min(), j)
+		save_champs_res(dom, x, y, champs_tab[j], time_tab[j], champs_tab.max(), champs_tab.min(), j)
 		j+=mult
 
 def plot_pres(self):
