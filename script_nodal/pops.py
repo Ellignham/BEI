@@ -95,6 +95,9 @@ class Reservoir(Init) :
         phi_old = np.copy(self.phi)
         #~ update tableau des phi
         self.update_phi()
+        # ~ Update des resistances et capa
+        self.resistance_tank()
+        self.capacite_tank()
         #~ calcul des flux  (isentropique)
         flux_pc = -self.Hlv * (self.phi - phi_old)
         taille=len(T)
