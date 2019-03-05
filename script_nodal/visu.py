@@ -111,7 +111,7 @@ def plot_temp_int(dom, x, y, temp, time):
     plt.show()
     plt.close()
 
-def save_champs_res(x, y, champs, time, cmax, cmin, j):
+def save_champs_res(dom, x, y, champs, time, cmax, cmin, j):
     """ 
     Plots a surface view of a reservoir-like geometry field. The field must be written in the non-structured form defined in Reservoir
     """
@@ -131,8 +131,8 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     plt.clim(vmin=cmin, vmax=cmax)
     cbar.ax.set_ylabel('Temperature')
     plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
-    plt.plot(xi,dom.height*np.ones(len(xi)) + dom.dz, '-g')
-    plt.plot(xi,dom.height*np.ones(len(xi)) - dom.dz, '-g')
+    # ~ plt.plot(xi,dom.height*np.ones(len(xi)) + dom.dz, '-g')
+    # ~ plt.plot(xi,dom.height*np.ones(len(xi)) - dom.dz, '-g')
 	
     # plot data points.
     #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
@@ -145,7 +145,7 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     plt.savefig('res_%(g)s.png'%{'g' : '%06d' %  j})
     plt.close()
 
-def save_png(x,y,champs_tab,time_tab):
+def save_png(dom, x,y,champs_tab,time_tab):
 	nframes=30
 	mult=len(time_tab) // nframes
 	j=0
@@ -157,7 +157,7 @@ def save_png(x,y,champs_tab,time_tab):
 	os.chdir('data')
 	while j <  len(time_tab) :
 		print('Saving figure %(g)s out of %(h)s in data directory'%{'g' : '%08d' % j, 'h' :  str(len(time_tab))})
-		save_champs_res(x, y, champs_tab[j], time_tab[j], champs_tab.max(), champs_tab.min(), j)
+		save_champs_res(dom, x, y, champs_tab[j], time_tab[j], champs_tab.max(), champs_tab.min(), j)
 		j+=mult
 
 def plot_pres(self):
