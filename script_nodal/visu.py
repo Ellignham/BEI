@@ -130,6 +130,10 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     cbar = fig1.colorbar(CS)
     plt.clim(vmin=cmin, vmax=cmax)
     cbar.ax.set_ylabel('Temperature')
+    plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
+    plt.plot(xi,dom.height*np.ones(len(xi)) + dom.dz, '-g')
+    plt.plot(xi,dom.height*np.ones(len(xi)) - dom.dz, '-g')
+	
     # plot data points.
     #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
     #~ plt.xlim(-0.1, 0.6)
