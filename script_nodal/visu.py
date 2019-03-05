@@ -111,7 +111,7 @@ def plot_temp_int(dom, x, y, temp, time):
     plt.show()
     plt.close()
 
-def save_champs_res(x, y, champs, time, cmax, cmin, j):
+def save_champs_res(dom, x, y, champs, time, cmax, cmin, j):
     """ 
     Plots a surface view of a reservoir-like geometry field. The field must be written in the non-structured form defined in Reservoir
     """
@@ -131,8 +131,8 @@ def save_champs_res(x, y, champs, time, cmax, cmin, j):
     plt.clim(vmin=cmin, vmax=cmax)
     cbar.ax.set_ylabel('Temperature')
     plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
-    plt.plot(xi,dom.height*np.ones(len(xi)) + dom.dz, '-g')
-    plt.plot(xi,dom.height*np.ones(len(xi)) - dom.dz, '-g')
+    # ~ plt.plot(xi,dom.height*np.ones(len(xi)) + dom.dz, '-g')
+    # ~ plt.plot(xi,dom.height*np.ones(len(xi)) - dom.dz, '-g')
 	
     # plot data points.
     #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
