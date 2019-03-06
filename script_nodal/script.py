@@ -30,17 +30,18 @@ elif (Reservoir1.mesh_type=='cart'):
 
 listVar=[i for i in range(ProblemSize)]
 AdapTimeStepBool=False
-Duration=300.
-MAXNTIMESTEP=10000
+Duration=50.
+MAXNTIMESTEP=1000000
 TIMESTEP=0.002
 METHODE='Euler'
 ListOfVariablesToSave=listVar
-SavedIteration=100
+SavedIteration=1000
 Error=1e-8
 #time=9250
 
+Reservoir1.dt = TIMESTEP
 
-Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_diph,METHODE,\
+Problem=PbDef.NumericalProblem(Reservoir1.systeme_init,Reservoir1.systeme_cond,METHODE,\
 MAXNTIMESTEP,ProblemSize,TimeStep=TIMESTEP,\
 Duration=Duration,AdaptativeTimeStep=AdapTimeStepBool,\
 NbIterationSaved=SavedIteration,\
@@ -58,6 +59,15 @@ TypeFrequency=1 # =0 : frequence d'iteration , =1 : frequence de temps
 TimeFrequency=1.0
 IterationFrequency=200
 temps, temp = lecture_champs('ResultArray.dat',TIMESTEP,SavedIteration,Duration,TimeFrequency,IterationFrequency,TypeFrequency)
+
+
+temps, temperature, x, y = reconstruct_champs(Reservoir1, 'ResultArray.dat')
+#~ Reservoir1.temp2d = temp[i].reshape((50, 5))
+plot_temp_int(Reservoir1, x, y, Reservoir1.phi, temps[-1]+Reservoir1.time_init)
+
+
+
+
 #~ ecriture_csv(ProblemSize,temps,Reservoir1)	
 
 

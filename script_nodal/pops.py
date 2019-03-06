@@ -67,7 +67,7 @@ class Reservoir(Init) :
             
             
 
-    def systeme_cond(self, T, dT_dt):
+    def systeme_cond(self, T, dT_dt, time=0.0):
         taille=len(T)
         for idnode in range(taille) :
             j=1
@@ -79,6 +79,7 @@ class Reservoir(Init) :
                 #~ print('toto')
                 if self.R[idnode,j] !=0. :
                     G=1./self.R[idnode,j]
+
                     ng=int(self.neig[idnode,j])
                     deltaT=T[ng] - T[idnode]
                     dT_dt[idnode]+= G*deltaT				
@@ -90,6 +91,7 @@ class Reservoir(Init) :
             
     def systeme_diph(self, T, dT_dt, time=0.0):
         
+        
         self.hauteur_interface(time)
         self.width_interface()
         phi_old = np.copy(self.phi)
@@ -98,14 +100,17 @@ class Reservoir(Init) :
         # ~ Update des resistances et capa
         self.resistance_tank()
         self.capacite_tank()
-        #~ calcul des flux  (isentropique)
-        flux_pc = -self.Hlv * (self.phi - phi_old)
+        #~ calcul des flux 
+        flux_pc = np.zeros(self.dom_size)
+        #~ print('time', time)
+        #~ print(self.height)
+
         taille=len(T)
         for idnode in range(taille) :
             j=1
             dT_dt[idnode]=0
             C=1./self.C[idnode]
-            
+            flux_pc[idnode] = -self.rho_diph[idnode] * self.Hlv * (self.phi[idnode] - phi_old[idnode])/self.dt
             #~ C=1.
             #~ print(int(self.neig[idnode,j]))
             while ((int(self.neig[idnode,j]) != -1)):
@@ -119,7 +124,7 @@ class Reservoir(Init) :
                 j+=1
             #~ bilan des flux
             dT_dt[idnode]=C * (dT_dt[idnode] + flux_pc[idnode])
-            
+        #~ print(flux_pc)            
 
     def hauteur_interface(self,time):
         '''
@@ -188,7 +193,7 @@ class Reservoir(Init) :
         
     def update_phi(self):
         
-        #~ Creation du domaine de changement de phase 
+        #~ Creation du domaine de changement de phase avec interface epaisse
         yimin=self.height-self.dz
         yimax=self.height+self.dz
         a= 1. / (yimax - yimin)

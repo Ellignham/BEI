@@ -435,7 +435,7 @@ class Init(Input):
 
 			
     def resistance_tank(self):
-        print('Computing Thermal Resistance for the domain...')
+        #~ print('Computing Thermal Resistance for the domain...')
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
@@ -531,9 +531,13 @@ class Init(Input):
     def capacite_tank(self):
         dx_cart=self.nodes[1,2] - self.nodes[0,2]
         dy_cart=self.nodes[self.Nptsx,1] - self.nodes[0,1]
+        self.rho_diph=np.zeros(self.dom_size)
+        #~ self.rho_diph=np.zeros(self.dom_size)
         for idnode in range(0,self.dom_size):
             rho_diph=self.phi[idnode]*self.rho_gas+(1-self.phi[idnode])*self.rho_liq
             cp_diph=self.phi[idnode]*self.cp_gas+(1-self.phi[idnode])*self.cp_liq
+            self.rho_diph[idnode]=rho_diph
+            #~ self.cp_diph[idnode]=cp_diph
             #middle of the 'rectangle part'
             if (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly-self.Lx):
                 self.C[idnode] = rho_diph*cp_diph*dx_cart*dy_cart

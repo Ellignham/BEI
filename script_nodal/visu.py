@@ -95,11 +95,11 @@ def plot_temp_int(dom, x, y, temp, time):
     zi = griddata(x,y, temp, xi,yi, interp='linear')
     bounds=np.linspace(zi.min(),zi.max(),100)
     # contour the gridded data, plotting dots at the nonuniform data points.
-    CS = plt.contourf(xi, yi, zi,100, levels=bounds, extend='max')
+    CS = plt.contourf(xi, yi, zi,100, levels=bounds, extend='both')
     #~ plt.autumn()
     cbar = fig1.colorbar(CS)
     #~ plt.clim(vmin=cmin, vmax=cmax)
-    cbar.ax.set_ylabel('Temperature')
+    cbar.ax.set_ylabel('Void fraction')
     # plot data points.
     #~ plt.scatter(x, y, marker='o', s=5, zorder=10)
     #~ plt.xlim(-0.1, 0.6)
@@ -107,17 +107,18 @@ def plot_temp_int(dom, x, y, temp, time):
     plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.title('%(h)s au bout de %(g)s secondes'%{'g' : time, 'h' : 'champs'})
-    plt.show()
+    plt.title('%(h)s after %(g)s seconds simulation'%{'g' : time, 'h' : 'Void fraction'})
+    #~ plt.show()
+    plt.savefig('phi_%(g)s.png'%{'g' : '%06d' %  time})
     plt.close()
 
 def save_champs_res(dom, x, y, champs, time, cmax, cmin, j):
     """ 
     Plots a surface view of a reservoir-like geometry field. The field must be written in the non-structured form defined in Reservoir
     """
-    fig1=plt.figure()
+    plt.figure()
     # define grid.
-    xi = np.linspace(-0.1, 0.6, 2000)
+    xi = np.linspace(-5.1, 5.1, 800)
     yi = np.linspace(-.1, 10.1, 10000)
     norm = mplc.Normalize(cmin, cmax)
     #~ v = np.linspace(cmin, cmax, 100, endpoint=True)
@@ -125,12 +126,12 @@ def save_champs_res(dom, x, y, champs, time, cmax, cmin, j):
     # grid the data.
     zi = griddata(x,y, champs, xi,yi, interp='linear')
     # contour the gridded data, plotting dots at the nonuniform data points.
-    CS = plt.contourf(xi, yi, zi,100, vmax=cmax, vmin=cmin, norm=norm, levels=bounds, extend='max')
+    CS = plt.contourf(xi, yi, zi,100, vmax=cmax, vmin=cmin, norm=norm, levels=bounds, extend='both')
     #~ plt.autumn()
-    cbar = fig1.colorbar(CS)
+    cbar = plt.colorbar(CS)
     plt.clim(vmin=cmin, vmax=cmax)
     cbar.ax.set_ylabel('Temperature')
-    plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
+    #~ plt.plot(xi,dom.height*np.ones(len(xi)), '-k')
     # ~ plt.plot(xi,dom.height*np.ones(len(xi)) + dom.dz, '-g')
     # ~ plt.plot(xi,dom.height*np.ones(len(xi)) - dom.dz, '-g')
 	
@@ -146,9 +147,10 @@ def save_champs_res(dom, x, y, champs, time, cmax, cmin, j):
     plt.close()
 
 def save_png(dom, x,y,champs_tab,time_tab):
-	nframes=30
+	nframes=52
 	mult=len(time_tab) // nframes
 	j=0
+
 	if os.path.isdir('data'):
 		print('Writing figures in data directory')
 	else :
