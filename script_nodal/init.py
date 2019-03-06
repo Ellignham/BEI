@@ -346,9 +346,9 @@ class Init(Input):
                     self.neig[self.Nptsy*self.Nptsx-1,3+theta]=id_node
                     self.neig[self.Nptsy*self.Nptsx-1,4+theta]=-1
                     
-		self.dy = max(abs(np.diff(self.nodes[:,1])))
+ 
+        self.dy = max(abs(np.diff(self.nodes[:,1])))
         
-           
     def init_phase(self):
         """
         phi         : array describing whether the fluid is liquid or gas 
@@ -436,7 +436,7 @@ class Init(Input):
 
 			
     def resistance_tank(self):
-        print('Computing Thermal Resistance for the domain...')
+        #print('Computing Thermal Resistance for the domain...')
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
