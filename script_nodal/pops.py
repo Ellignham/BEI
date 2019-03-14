@@ -28,9 +28,9 @@ class Reservoir(Init) :
 		
 	
     def systeme_init(self, temp) :
-		'''
-		Calls all functions required to initialise either the cartesian domain or the tank
-		'''
+        '''
+        Calls all functions required to initialise either the cartesian domain or the tank
+        '''
         if (self.mesh_type=='cart'):
             #~ Generation du maillage
             self.domain_cart()
@@ -156,9 +156,9 @@ class Reservoir(Init) :
             self.height=((t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1])*self.Ly
    
     def width_interface(self):
-		'''
-		Computes the width of the interface
-		'''
+        '''
+        Computes the width of the interface
+        '''
         #Points around the interface
         pts=[]
         epaisseur=self.dy
@@ -197,10 +197,10 @@ class Reservoir(Init) :
         
         
     def update_phi(self):
-		'''
-		Updates the void fraction function
-		'''
-        
+        '''
+        Updates the void fraction function
+        '''
+
         #~ Creation du domaine de changement de phase avec interface epaisse
         yimin=self.height-self.dz
         yimax=self.height+self.dz
