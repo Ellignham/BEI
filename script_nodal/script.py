@@ -21,7 +21,7 @@ from pops import Reservoir
 
 Reservoir1=Reservoir()
 
-		#~ INTEGRATION TEMPORELLE ET ECRITURE
+		#~ TIME INTEGRATION AND WRITING
 if (Reservoir1.mesh_type=='tank'):		
     ProblemSize=Reservoir1.Nptsx*Reservoir1.Nptsy+2*(Reservoir1.Nptsx-1)*Reservoir1.ntheta
 elif (Reservoir1.mesh_type=='cart'):
@@ -37,7 +37,6 @@ METHODE='Euler'
 ListOfVariablesToSave=listVar
 SavedIteration=1000
 Error=1e-8
-#time=9250
 
 Reservoir1.dt = TIMESTEP
 

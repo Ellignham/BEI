@@ -14,12 +14,14 @@ class Init(Input):
     def __init__(self):
         """
         Class used to initialize the different arrays
+        Size of arrays depends on the type of mesh
    
         Variables:
 
         x           : variable containing the x position of the nodes
         y           : variable containing the y position of the nodes 
         
+        dom_size	: number of nodes in the domain
         nodes       : |id of node|y position of node|x position of node|
         neig        : |id of node|neighbor 1|neighbor 2| ...  
                       in neig : -1 = no more neighbors, -2 = wall, -3 = symetry
@@ -42,7 +44,7 @@ class Init(Input):
 
     def domain_cart(self):
         """
-        Rectangle domain to test
+        Creates a rectangle domain mostly used to test newly implemented functions
         """
 
         for j in range(0,self.Nptsy):
@@ -53,34 +55,39 @@ class Init(Input):
                 self.nodes[i+j*self.Nptsx,2]=self.x[i]
                 #neighbor
                 self.neig[i+j*self.Nptsx,0]=i+j*self.Nptsx
+                #middle
                 if (j>0 and j<self.Nptsy-1 and i>0 and i<self.Nptsx-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=i+(j+1)*self.Nptsx
-                    self.neig[i+j*self.Nptsx,5]=-1 
+                    self.neig[i+j*self.Nptsx,5]=-1
+                #left boundary
                 elif (j==0 and i>0 and i<self.Nptsx-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j+1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=-1
+                #right boundary
                 elif (j==self.Nptsy-1 and i>0 and i<self.Nptsx-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+1+j*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=-1
+                #lower boundary
                 elif (i==0 and j>0 and j<self.Nptsy-1):
                     self.neig[i+j*self.Nptsx,1]=i+1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j+1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=-1
-
+                #top boundary
                 elif (i==self.Nptsx-1 and j>0 and j<self.Nptsy-1):
                     self.neig[i+j*self.Nptsx,1]=i-1+j*self.Nptsx 
                     self.neig[i+j*self.Nptsx,2]=i+(j+1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,3]=i+(j-1)*self.Nptsx
                     self.neig[i+j*self.Nptsx,4]=-1
-
+		
+		#Corners
         self.neig[0,1]=1
         self.neig[0,2]=self.Nptsx
         self.neig[0,3]=-1                            
@@ -107,14 +114,16 @@ class Init(Input):
             -creation of the bottom 'circle part' centered on (Lx,Lx) using polar coordinates
             -creation of the upper 'circle part' centered on (Ly+Lx,Lx) using polar coordinates
 
-
+        Varibles:
+        
         angle   : angle between two consecutive lines of points for polar coordinats
+        dy      : highest vertical distance between two points (used in interface_width)
 
-        local variables :
+        Local variables :
        
-            id_node : id of the node (used to create the 'cicrle parts') 
-            r       : distance to the center of the 'circle' for polar coordinates
-            theta   : angle relative to the border of the 'rectangle part' for polar coordinates
+        id_node : id of the node (used to create the 'cicrle parts') 
+        r       : distance to the center of the 'circle' for polar coordinates
+        theta   : angle relative to the border of the 'rectangle part' for polar coordinates
         """
        
         assert (self.ntheta > 0), "ntheta must be >0 to use the tank shape" 
@@ -188,10 +197,9 @@ class Init(Input):
         self.neig[self.Nptsx*self.Nptsy-1,4]=-1
    
         id_node=self.Nptsy*self.Nptsx-1 
-        #Create lower 'cricle part'
-       
         self.angle=math.pi/(self.ntheta*2)
-
+        
+        #Create lower 'cricle part'
         for theta in range(1,self.ntheta+1):
             for r in range(1,self.Nptsx):
                 #update the id of the node
@@ -365,10 +373,10 @@ class Init(Input):
 
         Variables :
 
-        pres        : array containing the pressure field [Pa]
+        pres        : array containing the pressure field [Pa] (unused)
 
-        U           : array containing the x velocity field [m/s]
-        V           : array containing the y velocity field [m/s]
+        U           : array containing the x velocity field [m/s] (unused)
+        V           : array containing the y velocity field [m/s] (unused)
 
         R           : array containing the conduction thermal resistance [K.m/W]
         C           : array containing the conduction thermal capacity
@@ -386,13 +394,15 @@ class Init(Input):
         self.V[:]=(self.phi[:]*self.vgas_init+(1-self.phi[:])*self.vliq_init)
 
         #Creation of thermal resistance arrays
-        self.R = np.zeros((self.dom_size, 5))#.reshape((len(self.nodes),1))
-        #~ np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta))
+        self.R = np.zeros((self.dom_size, 5))
         
         #Creation of thermal capacity array
         self.C = np.zeros((self.dom_size))
    
     def initemp_y(self):
+        '''
+        Initialise the temperature with T1 in the bottom half of the domain and a phase dependant temperature on the upper half
+        '''
         #Creation of the temperature array
         self.temp = np.zeros((self.dom_size))
         for k in range(0,self.dom_size):
@@ -402,6 +412,9 @@ class Init(Input):
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
               
     def initemp_x(self):
+        '''
+        Initialise the temperature with T1 in the left half of the domain and a phase dependant temperature on the right half
+        '''
         #Creation of the temperature array
         self.temp = np.zeros((self.dom_size))
         for k in range(0,self.dom_size):
@@ -411,12 +424,18 @@ class Init(Input):
                 self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
 			
     def initemp(self):
+        '''
+        Initialise the temperature with a phase dependant temperature
+        '''
         #Creation of the temperature array
         self.temp = np.zeros((self.dom_size))
         for k in range(0,self.dom_size):
             self.temp[k]=(self.phi[k]*self.tgas_init+(1-self.phi[k])*self.tliq_init)
     
     def resistance_cart(self):
+        '''
+        Initialise the thermal resistance between the nodes in the cartesian domain
+        '''
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         for idnode in range(self.dom_size) :
@@ -435,42 +454,45 @@ class Init(Input):
 
 			
     def resistance_tank(self):
+        '''
+        Initialise the thermal resistance between the nodes in the tank domain
+        '''
         #~ print('Computing Thermal Resistance for the domain...')
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         self.R=np.zeros((self.Nptsx*self.Nptsy+2*(self.Nptsx-1)*self.ntheta, 4+self.ntheta))
         for idnode in range(self.dom_size) :
             k_diph=(self.phi[idnode]*self.k_gas+(1-self.phi[idnode])*self.k_liq)
-            #POINT CENTRE DU BAS
+            #LOWER MIDDLE POINT
             if (idnode == self.Nptsx - 1) :
                 self.R[idnode,0] = idnode
-                #~ voisin gauche
+                #~ left neighbor
                 j=1
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (k_diph * dy)
-                #~ voisins bas
+                #~ lower neighbor
                 for j in range(3,self.ntheta+3) :
                     ng=int(self.neig[idnode,j])
                     rng=np.sqrt( (self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
                     self.R[idnode,j] = rng / (k_diph * rng*np.sin(self.angle))
                 j+=1
-                #~ voisin haut
+                #~ upper neighbor
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (k_diph * dy)
 
 
-            #POINT CENTRE DU HAUT
+            #UPPER MIDDLE POINT
             elif (idnode == self.Nptsy*self.Nptsx - 1) :
                 self.R[idnode,0] = idnode
-                #~ voisin gauche
+                #~ left neighbor
                 j=1
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (k_diph * dy)
-                #~ voisin bas
+                #~ lower neighbor
                 j+=2
                 ng=int(self.neig[idnode,j])
                 self.R[idnode,j] = dx / (k_diph * dy)
-                #~ voisins haut
+                #~ upper neighbor
                 for j in range(4,self.ntheta+4) :
                     ng=int(self.neig[idnode,j])
                     rng=np.sqrt( (self.Ly-self.Lx-self.nodes[ng,1])**2+ (self.Lx-self.nodes[ng,2])**2 )
@@ -478,7 +500,7 @@ class Init(Input):
 
 
                 
-			#~ PARTIE RECTANGLE
+			#~ RECTANGLE PART
             elif (idnode>=0 and idnode<self.Nptsx*self.Nptsy) :
                 j=1
                 self.R[idnode,0] = idnode
@@ -495,7 +517,7 @@ class Init(Input):
                         self.R[idnode,j]= res
                     j+=1
                     
-			#~ PARTIE POLAIRE
+			#~ POLAR PART
             else :
                 rnode=min(math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ), math.sqrt( (self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 ))
                 j=1
@@ -521,6 +543,11 @@ class Init(Input):
 
 
     def capacite_cart(self):
+        '''
+        Initialise the thermal capacity between the nodes in the cartesian domain
+        
+        Variables
+        '''
         dx=self.nodes[1,2] - self.nodes[0,2]
         dy=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         for idnode in range(self.dom_size) :
@@ -529,15 +556,16 @@ class Init(Input):
             self.C[idnode] = rho_diph*cp_diph*dx*dy
 
     def capacite_tank(self):
+        '''
+        Initialise the thermal capacity between the nodes in the tank domain
+        '''
         dx_cart=self.nodes[1,2] - self.nodes[0,2]
         dy_cart=self.nodes[self.Nptsx,1] - self.nodes[0,1]
         self.rho_diph=np.zeros(self.dom_size)
-        #~ self.rho_diph=np.zeros(self.dom_size)
         for idnode in range(0,self.dom_size):
             rho_diph=self.phi[idnode]*self.rho_gas+(1-self.phi[idnode])*self.rho_liq
             cp_diph=self.phi[idnode]*self.cp_gas+(1-self.phi[idnode])*self.cp_liq
             self.rho_diph[idnode]=rho_diph
-            #~ self.cp_diph[idnode]=cp_diph
             #middle of the 'rectangle part'
             if (self.nodes[idnode,1]>self.Lx and self.nodes[idnode,1]<self.Ly-self.Lx):
                 self.C[idnode] = rho_diph*cp_diph*dx_cart*dy_cart
@@ -560,13 +588,3 @@ class Init(Input):
             elif (self.nodes[idnode,1]<self.Lx):
                 self.C[idnode] = rho_diph*cp_diph*(self.angle/2*(2*dx_cart*math.sqrt( (self.Ly-self.Lx-self.nodes[idnode,1])**2+ (self.Lx-self.nodes[idnode,2])**2 )))
 
-
-
-
-
-#test=Init()
-#test.domain_cart()
-#test.init_domain()
-#test.capacite_tank()
-#test.resistance_tank()
-#print(self.R)

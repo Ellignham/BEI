@@ -28,17 +28,29 @@ class Reservoir(Init) :
 		
 	
     def systeme_init(self, temp) :
+		'''
+		Calls all functions required to initialise either the cartesian domain or the tank
+		'''
         if (self.mesh_type=='cart'):
-            self.init_phase()
+            #~ Generation du maillage
             self.domain_cart()
+            #~ Initialisation de la fonction de phase (uniforme a 0 => liq)
+            self.init_phase()
+            #~ Trouve la hauteur initiale de l'interface
+            self.hauteur_interface(0.0)
+            #~ Calcul de phi initial avec interface
+            self.update_phi()
+            #~ Cree les vecteurs de temp, pres, vitesse, resistance et capa
+            #~ Initialise pres, vitesse
             self.init_domain()
-            #~ self.domain[:,0]=self.nodes[:,2]
-            #~ self.domain[:,1]=self.nodes[:,1]
+            #~ initialise le champs de temp avec l'interface
+            self.initemp()
+			#~ Initialise les resistance
             self.resistance_cart()
-            #self.initemp_cart_x()
-            self.initemp_y()
+            #~ Initialise les capacites des noeuds dans le tank
             self.capacite_cart()
             temp[:]=np.copy(self.temp)
+                
         elif (self.mesh_type=='tank'):
             #~ Generation du maillage
             self.domain_tank()
@@ -53,10 +65,6 @@ class Reservoir(Init) :
             self.init_domain()
             #~ initialise le champs de temp avec l'interface
             self.initemp()
-
-
-
-
             #~ Initialise les resistance
             self.resistance_tank()
             #~ Initialise les capacites des noeuds dans le tank
@@ -111,10 +119,7 @@ class Reservoir(Init) :
             dT_dt[idnode]=0
             C=1./self.C[idnode]
             flux_pc[idnode] = -self.rho_diph[idnode] * self.Hlv * (self.phi[idnode] - phi_old[idnode])/self.dt
-            #~ C=1.
-            #~ print(int(self.neig[idnode,j]))
             while ((int(self.neig[idnode,j]) != -1)):
-                #~ print('toto')
                 if self.R[idnode,j] !=0. :
                     #~ flux provenant des autres noeuds par conduction 
                     G=1./self.R[idnode,j]
@@ -124,17 +129,15 @@ class Reservoir(Init) :
                 j+=1
             #~ bilan des flux
             dT_dt[idnode]=C * (dT_dt[idnode] + flux_pc[idnode])
-        #~ print(flux_pc)            
+          
 
     def hauteur_interface(self,time):
         '''
         Computes the position of the interface
         '''
-        #print(interface)
         time=time+self.time_init 
         interface=np.loadtxt("LOX_Height_vs_Time_BEI.txt")
-        #print(interface)
-
+   
         loop=True
         i=0
 
@@ -153,13 +156,15 @@ class Reservoir(Init) :
             self.height=((t2-time)/(t2-t1)*interface[i-1,1]+(time-t1)/(t2-t1)*interface[i,1])*self.Ly
    
     def width_interface(self):
+		'''
+		Computes the width of the interface
+		'''
         #Points around the interface
         pts=[]
         epaisseur=self.dy
         for idnode in range(0,self.dom_size):
             if abs(self.nodes[idnode,1]-self.height)<=epaisseur :
                 pts.append(idnode)
-                
         
         #Width of the interface
         gradTL=[]
@@ -192,6 +197,9 @@ class Reservoir(Init) :
         
         
     def update_phi(self):
+		'''
+		Updates the void fraction function
+		'''
         
         #~ Creation du domaine de changement de phase avec interface epaisse
         yimin=self.height-self.dz
@@ -213,23 +221,3 @@ class Reservoir(Init) :
         imax=self.nodes[:,1]>yimax
         it=np.where(imax)
         self.phi[it] = 1.
-
-'''
-test=Reservoir()
-
-if (test.mesh_type=='tank'):		
-    ProblemSize=test.Nptsx*test.Nptsy+2*(test.Nptsx-1)*test.ntheta
-elif (test.mesh_type=='cart'):
-    ProblemSize=test.Nptsx*test.Nptsy
-
-prout = np.zeros(ProblemSize)
-test.systeme_init(prout)
-#~ test.update_phi()
-
-#~ print(test.temp)
-#~ 
-
-exec(open("./visu.py").read())
-temps, temperature, x, y = reconstruct_champs(test, 'ResultArray.dat')
-plot_temp_int(test, x, y, test.temp, temps[0])
-'''
